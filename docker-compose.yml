@@ -15,7 +15,7 @@ services:
     build:
       context: ./apps/dashboard
     container_name: dashboard
-    restart: unless-stopped
+    restart: always
     ports:
       - 3000:3000
 

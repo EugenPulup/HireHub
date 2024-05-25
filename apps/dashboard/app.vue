@@ -1,6 +1,6 @@
 <template>
   <div>
     <NuxtWelcome />
-    <Button variant="destructive" />
+    <Button variant="destructive">TEXXXT</Button>
   </div>
 </template>
