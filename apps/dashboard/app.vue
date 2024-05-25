@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <NuxtWelcome />
-    <Button variant="destructive">TEXXXT</Button>
-  </div>
+  <NuxtLayout>
+    <NuxtPage></NuxtPage>
+  </NuxtLayout>
 </template>

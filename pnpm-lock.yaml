@@ -10,6 +10,9 @@ importers:
 
   apps/dashboard:
     dependencies:
+      '@vueuse/core':
+        specifier: ^10.9.0
+        version: 10.9.0(vue@3.4.27)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
