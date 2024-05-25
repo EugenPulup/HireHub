@@ -1,0 +1,20 @@
+FROM node:18.14.2
+
+WORKDIR /app
+
+COPY package*.json ./
+
+# Install pnpm
+RUN npm install -g pnpm
+
+# Install dependencies
+COPY . .
+RUN pnpm install
+
+# Build the NestJS app
+RUN pnpm build
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+CMD [ "pnpm", "run", "start" ]

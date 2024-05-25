@@ -11,6 +11,14 @@ services:
       RABBITMQ_DEFAULT_USER: user
       RABBITMQ_DEFAULT_PASS: password
 
+  dashboard:
+    build:
+      context: ./apps/dashboard
+    container_name: dashboard
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+
   finder-microservice:
     build:
       context: ./apps/finder-microservice
