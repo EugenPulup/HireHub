@@ -10,7 +10,7 @@ import { AppService } from './app.service';
         name: 'FINDER_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://localhost:5672'],
+          urls: [process.env.RABBITMQ_URI],
           queue: 'finder_jobs',
           queueOptions: {
             durable: false,
