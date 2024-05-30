@@ -14,7 +14,7 @@ services:
   dashboard:
     build:
       context: ./apps/dashboard
-      target: development
+      target: dev
     container_name: dashboard
     restart: always
     ports:
