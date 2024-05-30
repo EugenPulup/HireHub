@@ -4,31 +4,7 @@ const isCollapsed = ref(true);
 const links = [
   {
     title: "Campaigns",
-    label: "2",
-    icon: "material-symbols:campaign-outline",
-    variant: "ghost",
-  },
-  {
-    title: "Updates",
-    label: "342",
-    icon: "lucide:alert-circle",
-    variant: "ghost",
-  },
-  {
-    title: "Forums",
-    label: "128",
-    icon: "lucide:message-square",
-    variant: "ghost",
-  },
-  {
-    title: "Shopping",
-    label: "8",
-    icon: "lucide:shopping-cart",
-    variant: "ghost",
-  },
-  {
-    title: "Promotions",
-    label: "21",
+    label: "0",
     icon: "lucide:archive",
     variant: "ghost",
   },
@@ -36,9 +12,19 @@ const links = [
 
 const users = [
   {
-    label: "John Doe",
-    value: "john-doe",
-    icon: "lucide:circle-user-round",
+    label: "Alicia Koch",
+    email: "alicia@example.com",
+    icon: "ion:logo-vercel",
+  },
+  {
+    label: "Alicia Koch",
+    email: "alicia@gmail.com",
+    icon: "mdi:google",
+  },
+  {
+    label: "Alicia Koch",
+    email: "alicia@me.com",
+    icon: "bx:bxl-gmail",
   },
 ];
 
@@ -72,11 +58,17 @@ function onExpand() {
         @expand="onExpand"
         @collapse="onCollapse"
       >
-        <div class="p-2">
-          <MoleculeSelectWithIcon
-            :items="users"
-            :selected-item="users[0]"
-            :collapsed="isCollapsed"
+        <div
+          :class="
+            cn(
+              'flex h-[52px] items-center justify-center',
+              isCollapsed ? 'h-[52px]' : 'px-2'
+            )
+          "
+        >
+          <MoleculeSelectAccount
+            :is-collapsed="isCollapsed"
+            :accounts="users"
           />
         </div>
 
