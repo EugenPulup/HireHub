@@ -1,9 +1,6 @@
 <script setup>
 const isCollapsed = ref(true);
 
-const route = useRoute();
-const router = useRouter();
-
 const links = [
   {
     title: "Dashboard",
