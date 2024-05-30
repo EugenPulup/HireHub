@@ -1,12 +1,23 @@
 <script setup>
 const isCollapsed = ref(true);
 
+const route = useRoute();
+const router = useRouter();
+
 const links = [
+  {
+    title: "Dashboard",
+    label: "0",
+    icon: "lucide:bar-chart-4",
+    variant: "ghost",
+    name: "index",
+  },
   {
     title: "Campaigns",
     label: "0",
     icon: "lucide:archive",
     variant: "ghost",
+    name: "campaigns",
   },
 ];
 
@@ -61,8 +72,8 @@ function onExpand() {
         <div
           :class="
             cn(
-              'flex h-[52px] items-center justify-center',
-              isCollapsed ? 'h-[52px]' : 'px-2'
+              'flex h-14 items-center justify-center',
+              isCollapsed ? 'h-14' : 'px-2'
             )
           "
         >
@@ -76,8 +87,35 @@ function onExpand() {
         <SICNavBar :is-collapsed="isCollapsed" :links="links" />
       </ResizablePanel>
       <ResizableHandle id="resize-handle-1" with-handle />
-      <ResizablePanel class="h-screen p-2">
-        <slot> </slot>
+      <ResizablePanel class="h-screen">
+        <section class="flex flex-col size-full">
+          <div class="w-full h-14 flex items-center p-3 justify-between">
+            <MoleculeBreadcrumbs />
+
+            <div class="relative w-full max-w-sm items-center">
+              <Input
+                id="search"
+                type="search"
+                placeholder="Search..."
+                class="pl-10"
+              />
+              <span
+                class="absolute start-0 inset-y-0 flex items-center justify-center px-2"
+              >
+                <Icon
+                  name="lucide:search"
+                  class="size-6 text-muted-foreground"
+                />
+              </span>
+            </div>
+          </div>
+
+          <Separator />
+
+          <div class="size-full p-2">
+            <slot> </slot>
+          </div>
+        </section>
       </ResizablePanel>
     </ResizablePanelGroup>
   </TooltipProvider>

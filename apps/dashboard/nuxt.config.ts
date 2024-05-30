@@ -15,5 +15,7 @@ export default defineNuxtConfig({
     componentDir: "./components/ui",
   },
 
+  pages: true,
+
   components: true,
 });
