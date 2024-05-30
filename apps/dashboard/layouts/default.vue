@@ -1,44 +1,41 @@
 <script setup>
 const isCollapsed = ref(true);
 
+const route = useRoute();
+const router = useRouter();
+
 const links = [
   {
+    title: "Dashboard",
+    label: "0",
+    icon: "lucide:bar-chart-4",
+    variant: "ghost",
+    name: "index",
+  },
+  {
     title: "Campaigns",
-    label: "2",
-    icon: "material-symbols:campaign-outline",
-    variant: "ghost",
-  },
-  {
-    title: "Updates",
-    label: "342",
-    icon: "lucide:alert-circle",
-    variant: "ghost",
-  },
-  {
-    title: "Forums",
-    label: "128",
-    icon: "lucide:message-square",
-    variant: "ghost",
-  },
-  {
-    title: "Shopping",
-    label: "8",
-    icon: "lucide:shopping-cart",
-    variant: "ghost",
-  },
-  {
-    title: "Promotions",
-    label: "21",
+    label: "0",
     icon: "lucide:archive",
     variant: "ghost",
+    name: "campaigns",
   },
 ];
 
 const users = [
   {
-    label: "John Doe",
-    value: "john-doe",
-    icon: "lucide:circle-user-round",
+    label: "Alicia Koch",
+    email: "alicia@example.com",
+    icon: "ion:logo-vercel",
+  },
+  {
+    label: "Alicia Koch",
+    email: "alicia@gmail.com",
+    icon: "mdi:google",
+  },
+  {
+    label: "Alicia Koch",
+    email: "alicia@me.com",
+    icon: "bx:bxl-gmail",
   },
 ];
 
@@ -72,11 +69,17 @@ function onExpand() {
         @expand="onExpand"
         @collapse="onCollapse"
       >
-        <div class="p-2">
-          <MoleculeSelectWithIcon
-            :items="users"
-            :selected-item="users[0]"
-            :collapsed="isCollapsed"
+        <div
+          :class="
+            cn(
+              'flex h-14 items-center justify-center',
+              isCollapsed ? 'h-14' : 'px-2'
+            )
+          "
+        >
+          <MoleculeSelectAccount
+            :is-collapsed="isCollapsed"
+            :accounts="users"
           />
         </div>
 
@@ -84,8 +87,35 @@ function onExpand() {
         <SICNavBar :is-collapsed="isCollapsed" :links="links" />
       </ResizablePanel>
       <ResizableHandle id="resize-handle-1" with-handle />
-      <ResizablePanel class="h-screen p-2">
-        <slot> </slot>
+      <ResizablePanel class="h-screen">
+        <section class="flex flex-col size-full">
+          <div class="w-full h-14 flex items-center p-3 justify-between">
+            <MoleculeBreadcrumbs />
+
+            <div class="relative w-full max-w-sm items-center">
+              <Input
+                id="search"
+                type="search"
+                placeholder="Search..."
+                class="pl-10"
+              />
+              <span
+                class="absolute start-0 inset-y-0 flex items-center justify-center px-2"
+              >
+                <Icon
+                  name="lucide:search"
+                  class="size-6 text-muted-foreground"
+                />
+              </span>
+            </div>
+          </div>
+
+          <Separator />
+
+          <div class="size-full p-2">
+            <slot> </slot>
+          </div>
+        </section>
       </ResizablePanel>
     </ResizablePanelGroup>
   </TooltipProvider>

@@ -1,6 +1,4 @@
 <script setup>
-import { cn } from "@/lib/utils";
-
 defineProps({
   isCollapsed: Boolean,
   links: Array,
@@ -18,10 +16,12 @@ defineProps({
       <template v-for="(link, index) of links">
         <Tooltip v-if="isCollapsed" :key="`1-${index}`" :delay-duration="0">
           <TooltipTrigger as-child>
-            <Button size="sm" variant="ghost">
-              <Icon :name="link.icon" color="black" class="size-6" />
-              <span class="sr-only">{{ link.title }}</span>
-            </Button>
+            <NuxtLink :to="{ name: link.name }" tabindex="-1">
+              <Button size="sm" variant="ghost">
+                <Icon :name="link.icon" color="black" class="size-6" />
+                <span class="sr-only">{{ link.title }}</span>
+              </Button>
+            </NuxtLink>
           </TooltipTrigger>
           <TooltipContent side="right" class="flex items-center gap-4">
             {{ link.title }}
@@ -32,19 +32,26 @@ defineProps({
         </Tooltip>
 
         <Button v-else :key="`2-${index}`" size="sm" variant="ghost">
-          <Icon :name="link.icon" class="mr-2 size-6" />
-          {{ link.title }}
-          <span
-            v-if="link.label"
-            :class="
-              cn(
-                'ml-auto',
-                link.variant === 'default' && 'text-background dark:text-white'
-              )
-            "
+          <NuxtLink
+            :to="{ name: link.name }"
+            tabindex="-1"
+            class="w-full flex justify-between items-center"
           >
-            {{ link.label }}
-          </span>
+            <Icon :name="link.icon" class="mr-2 size-6" />
+            {{ link.title }}
+            <span
+              v-if="link.label"
+              :class="
+                cn(
+                  'ml-auto',
+                  link.variant === 'default' &&
+                    'text-background dark:text-white'
+                )
+              "
+            >
+              {{ link.label }}
+            </span>
+          </NuxtLink>
         </Button>
       </template>
     </nav>
