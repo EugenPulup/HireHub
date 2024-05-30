@@ -1,4 +1,4 @@
-FROM node:18.14.2
+FROM node:18.14.2 as base
 
 WORKDIR /app
 
@@ -11,10 +11,19 @@ RUN npm install -g pnpm
 COPY . .
 RUN pnpm install
 
+FROM base as dev
+
+EXPOSE 3000 
+EXPOSE 24678 
+
+CMD [ "pnpm", "run", "dev" ]
+
+FROM base as prod
+
 # Build the NestJS app
 RUN pnpm build
 
 # Expose the port the app runs on
 EXPOSE 3000
 
-CMD [ "pnpm", "run", "start" ]
+ENTRYPOINT ["node", ".output/server/index.mjs"]

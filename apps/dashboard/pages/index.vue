@@ -1,5 +1,5 @@
 <template>
   <div>
-    <ShaButton> Home </ShaButton>
+    <Button :variant="'default'"> Home </Button>
   </div>
 </template>
