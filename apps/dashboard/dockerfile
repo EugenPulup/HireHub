@@ -2,13 +2,15 @@ FROM node:18.14.2 AS base
 
 WORKDIR /app
 
-COPY package*.json ./
-
-# Install pnpm
 RUN npm install -g pnpm
 
-# Install dependencies
+COPY package.json ./
+
+# Install pnpm
 COPY . .
+
+# Install dependencies
+
 RUN pnpm install
 
 FROM base AS dev
@@ -16,7 +18,7 @@ FROM base AS dev
 EXPOSE 3000 
 EXPOSE 24678 
 
-CMD [ "pnpm", "run", "dev" ]
+CMD [ "pnpm", "--filter", "dashboard", "dev" ]
 
 FROM base AS prod
 

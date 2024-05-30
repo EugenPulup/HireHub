@@ -13,7 +13,8 @@ services:
 
   dashboard:
     build:
-      context: ./apps/dashboard
+      context: .
+      dockerfile: ./apps/dashboard/dockerfile
       target: dev
     container_name: dashboard
     restart: always

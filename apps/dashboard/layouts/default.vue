@@ -3,9 +3,9 @@ const isCollapsed = ref(true);
 
 const links = [
   {
-    title: "Social",
-    label: "972",
-    icon: "lucide:user-2",
+    title: "Campaigns",
+    label: "2",
+    icon: "material-symbols:campaign-outline",
     variant: "ghost",
   },
   {
