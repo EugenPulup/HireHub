@@ -1,5 +1,5 @@
 # Base image
-FROM node:18
+FROM node:18 AS builder
 
 # Set the working directory
 WORKDIR /app
@@ -12,13 +12,22 @@ RUN npm install -g pnpm
 
 # Install dependencies
 COPY . .
-RUN pnpm install
+RUN pnpm --filter finder-microservice install
 
-# Build the NestJS app
-RUN pnpm build
+FROM builder AS dev
 
 # Expose the port the app runs on
 EXPOSE 3000
 
 # Start the app
-CMD ["pnpm", "start:prod"]
+CMD [ "pnpm", "--filter", "finder-microservice", "dev" ]
+
+FROM builder AS prod
+# Build the NestJS app
+RUN pnpm --filter finder-microservice build
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+# Start the app
+CMD [ "pnpm", "--filter", "finder-microservice", "start:prod" ]
