@@ -26,6 +26,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/finder-microservice/dockerfile
+      target: dev
     container_name: finder-microservice
     ports:
       - "3001:3000"
@@ -39,6 +40,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/gateway-microservice/dockerfile
+      target: dev
     container_name: gateway-microservice
     ports:
       - "3002:3000"
