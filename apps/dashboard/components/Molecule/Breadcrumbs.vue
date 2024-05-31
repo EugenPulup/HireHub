@@ -8,7 +8,6 @@ const breadcrumbs = ref([]) as Ref<RouteRecordNormalized[]>;
 watch(
   () => route.name,
   () => {
-    console.log("Route changed");
     breadcrumbs.value = [];
 
     const allRoutes = router.getRoutes();
@@ -18,12 +17,10 @@ watch(
     let count = 0;
 
     while (hasNextRoute) {
-      console.log("Looping", count++);
       if (currentRoute) {
         breadcrumbs.value.unshift(currentRoute);
 
         if (!currentRoute.meta.parent) {
-          console.log("No parent");
           hasNextRoute = false;
           continue;
         }

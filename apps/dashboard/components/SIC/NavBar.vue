@@ -35,7 +35,7 @@ defineProps({
           <NuxtLink
             :to="{ name: link.name }"
             tabindex="-1"
-            class="w-full flex justify-between items-center"
+            class="size-full flex justify-between items-center"
           >
             <Icon :name="link.icon" class="mr-2 size-6" />
             {{ link.title }}

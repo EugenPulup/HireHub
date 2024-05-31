@@ -109,7 +109,7 @@ function onExpand() {
 
           <Separator />
 
-          <div class="size-full p-2">
+          <div class="size-full p-2 relative">
             <slot> </slot>
           </div>
         </section>
