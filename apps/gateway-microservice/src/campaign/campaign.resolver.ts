@@ -23,11 +23,14 @@ export class CampaignResolver {
   }
 
   @Query(() => [Campaign], { name: 'campaign' })
-  findAll() {
-    return this.campaignService.findAll();
+  findAll(
+    @Args('offset', { type: () => Int }) offset: number,
+    @Args('limit', { type: () => Int }) limit: number,
+  ) {
+    return this.campaignService.findAll(offset, limit);
   }
 
-  @Query(() => Campaign, { name: 'campaign' })
+  @Query(() => Campaign, { name: 'campaignById' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.campaignService.findOne(id);
   }
@@ -43,7 +46,7 @@ export class CampaignResolver {
   }
 
   @Mutation(() => Campaign)
-  removeCampaign(@Args('id', { type: () => String }) id: number) {
+  removeCampaign(@Args('id', { type: () => String }) id: string) {
     return this.campaignService.remove(id);
   }
 }

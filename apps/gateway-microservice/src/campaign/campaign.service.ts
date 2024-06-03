@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { CreateCampaignInput } from './dto/create-campaign.input';
 import { UpdateCampaignInput } from './dto/update-campaign.input';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class CampaignService {
@@ -14,8 +13,11 @@ export class CampaignService {
     });
   }
 
-  findAll() {
-    return `This action returns all campaign`;
+  findAll(offset = 0 as number, limit = 10 as number) {
+    return this.prisma.campaign.findMany({
+      skip: offset,
+      take: limit,
+    });
   }
 
   findOne(id: string) {
@@ -31,7 +33,9 @@ export class CampaignService {
     });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} campaign`;
+  remove(id: string) {
+    return this.prisma.campaign.delete({
+      where: { id },
+    });
   }
 }
