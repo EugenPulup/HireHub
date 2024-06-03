@@ -12,3 +12,34 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Campaign {
+  id        String          @id @default(cuid())
+  name      String
+  keyword   String
+  providers Providers[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  status    CampaignStatus
+  endType   CampaignEndType
+  endValue  Int?
+}
+
+enum CampaignStatus {
+  ACTIVE
+  PAUSED
+  DELETED
+  ENDED
+}
+
+enum CampaignEndType {
+  NEVER
+  DATE
+  COUNT
+}
+
+enum Providers {
+  WORKUA
+  ROBOTAUA
+  LINKEDIN
+}
