@@ -1,35 +1,10 @@
 import { ObjectType, Field, Int, registerEnumType } from '@nestjs/graphql';
 
-enum CampaignStatus {
-  ACTIVE,
-  PAUSED,
-  DELETED,
-  ENDED,
-}
+type Providers = 'WORKUA' | 'ROBOTAUA' | 'LINKEDIN';
 
-enum CampaignEndType {
-  NEVER,
-  DATE,
-  COUNT,
-}
+type CampaignEndType = 'NEVER' | 'DATE' | 'COUNT';
 
-enum Providers {
-  WORKUA,
-  ROBOTAUA,
-  LINKEDIN,
-}
-
-registerEnumType(CampaignStatus, {
-  name: 'CampaignStatus',
-});
-
-registerEnumType(CampaignEndType, {
-  name: 'CampaignEndType',
-});
-
-registerEnumType(Providers, {
-  name: 'Providers',
-});
+type CampaignStatus = 'ACTIVE' | 'PAUSED' | 'DELETED' | 'ENDED';
 
 @ObjectType()
 export class Campaign {
@@ -42,7 +17,7 @@ export class Campaign {
   @Field(() => String)
   keyword: string;
 
-  @Field(() => [Providers])
+  @Field(() => [String])
   providers: Providers[];
 
   @Field(() => Date)
@@ -51,10 +26,10 @@ export class Campaign {
   @Field(() => Date)
   updatedAt: Date;
 
-  @Field(() => CampaignStatus)
+  @Field(() => String)
   status: CampaignStatus;
 
-  @Field(() => CampaignEndType)
+  @Field(() => String)
   endType: CampaignEndType;
 
   @Field(() => Int, { nullable: true })

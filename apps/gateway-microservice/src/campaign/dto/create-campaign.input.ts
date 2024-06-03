@@ -1,56 +1,51 @@
-import {
-  ObjectType,
-  Field,
-  Int,
-  registerEnumType,
-  InputType,
-} from '@nestjs/graphql';
+import { Field, Int, InputType, Union, createUnionType } from '@nestjs/graphql';
 
-import { IsEmail, IsNotEmpty } from 'class-validator';
+// enum CampaignStatus {
+//   ACTIVE,
+//   PAUSED,
+//   DELETED,
+//   ENDED,
+// }
 
-enum CampaignStatus {
-  ACTIVE,
-  PAUSED,
-  DELETED,
-  ENDED,
-}
+// enum CampaignEndType {
+//   NEVER,
+//   DATE,
+//   COUNT,
+// }
 
-enum CampaignEndType {
-  NEVER,
-  DATE,
-  COUNT,
-}
+// enum Providers {
+//   WORKUA,
+//   ROBOTAUA,
+//   LINKEDIN,
+// }
 
-enum Providers {
-  WORKUA,
-  ROBOTAUA,
-  LINKEDIN,
-}
+type Providers = 'WORKUA' | 'ROBOTAUA' | 'LINKEDIN';
 
-registerEnumType(CampaignStatus, {
-  name: 'CampaignStatus',
-});
+type CampaignEndType = 'NEVER' | 'DATE' | 'COUNT';
 
-registerEnumType(CampaignEndType, {
-  name: 'CampaignEndType',
-});
+type CampaignStatus = 'ACTIVE' | 'PAUSED' | 'DELETED' | 'ENDED';
 
-registerEnumType(Providers, {
-  name: 'Providers',
-});
+// registerEnumType(CampaignStatus, {
+//   name: 'CampaignStatus',
+// });
+
+// registerEnumType(CampaignEndType, {
+//   name: 'CampaignEndType',
+// });
+
+// registerEnumType(Providers, {
+//   name: 'Providers',
+// });
 
 @InputType()
 export class CreateCampaignInput {
   @Field(() => String)
-  @IsNotEmpty()
   name: string;
 
   @Field(() => String)
-  @IsNotEmpty()
   keyword: string;
 
-  @Field(() => [Providers])
-  @IsNotEmpty()
+  @Field(() => [String])
   providers: Providers[];
 
   @Field(() => Date)
@@ -59,10 +54,10 @@ export class CreateCampaignInput {
   @Field(() => Date)
   updatedAt: Date;
 
-  @Field(() => CampaignStatus)
+  @Field(() => String)
   status: CampaignStatus;
 
-  @Field(() => CampaignEndType)
+  @Field(() => String)
   endType: CampaignEndType;
 
   @Field(() => Int, { nullable: true })
