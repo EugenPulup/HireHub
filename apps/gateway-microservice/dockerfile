@@ -14,13 +14,15 @@ RUN npm install -g pnpm
 COPY . .
 RUN pnpm --filter gateway-microservice install
 
+RUN pnpm --filter gateway-microservice prisma:generate
+
 FROM builder AS dev
 
 # Expose the port the app runs on
 EXPOSE 3000
 
 # Start the app
-CMD [ "pnpm", "--filter", "gateway-microservice", "dev" ]
+CMD [ "pnpm", "--filter", "gateway-microservice", "start:dev" ]
 
 FROM builder AS prod
 # Build the NestJS app

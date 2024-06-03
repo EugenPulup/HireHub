@@ -20,7 +20,7 @@ FROM builder AS dev
 EXPOSE 3000
 
 # Start the app
-CMD [ "pnpm", "--filter", "finder-microservice", "dev" ]
+CMD [ "pnpm", "--filter", "finder-microservice", "start:dev" ]
 
 FROM builder AS prod
 # Build the NestJS app
