@@ -1,57 +1,68 @@
-<script lang="ts" setup>
-interface AccountSwitcherProps {
-  isCollapsed: boolean;
-  accounts: {
-    label: string;
-    email: string;
-    icon: string;
-  }[];
-}
+<script setup lang="ts">
+import type { Avatar } from "#ui/types";
 
-const props = defineProps<AccountSwitcherProps>();
+defineProps<{
+  collapsed: boolean;
+}>();
 
-const selectedEmail = ref<string>(props.accounts[0].email);
-const selectedEmailData = computed(() =>
-  props.accounts.find((item) => item.email === selectedEmail.value)
-);
+const people = [
+  {
+    id: "benjamincanac",
+    label: "benjamincanac",
+    href: "https://github.com/benjamincanac",
+    target: "_blank",
+    avatar: { src: "https://avatars.githubusercontent.com/u/739984?v=4" },
+  },
+  {
+    id: "Atinux",
+    label: "Atinux",
+    href: "https://github.com/Atinux",
+    target: "_blank",
+    avatar: { src: "https://avatars.githubusercontent.com/u/904724?v=4" },
+  },
+  {
+    id: "smarroufin",
+    label: "smarroufin",
+    href: "https://github.com/smarroufin",
+    target: "_blank",
+    avatar: { src: "https://avatars.githubusercontent.com/u/7547335?v=4" },
+  },
+  {
+    id: "nobody",
+    label: "Nobody",
+    icon: "i-heroicons-user-circle",
+  },
+];
+
+const selected = ref(people[0]);
 </script>
 
 <template>
-  <Select v-model="selectedEmail">
-    <SelectTrigger
-      aria-label="Select account"
-      :class="
-        cn(
-          'flex items-center gap-2 [&>span]:line-clamp-1 [&>span]:flex [&>span]:w-full [&>span]:items-center [&>span]:gap-1 [&>span]:truncate [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0',
-          {
-            'flex h-9 w-9 shrink-0 items-center justify-center p-0 [&>span]:w-auto [&>svg]:hidden':
-              isCollapsed,
-          }
-        )
-      "
-    >
-      <SelectValue placeholder="Select an account">
-        <div class="flex items-center gap-3">
-          <Icon class="size-4" :name="selectedEmailData!.icon" />
-          <span v-if="!isCollapsed">
-            {{ selectedEmailData!.label }}
-          </span>
-        </div>
-      </SelectValue>
-    </SelectTrigger>
-    <SelectContent>
-      <SelectItem
-        v-for="account of accounts"
-        :key="account.email"
-        :value="account.email"
-      >
-        <div
-          class="flex items-center gap-3 [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-foreground"
-        >
-          <Icon class="size-4" :name="account.icon" />
-          {{ account.email }}
-        </div>
-      </SelectItem>
-    </SelectContent>
-  </Select>
+  <USelectMenu
+    v-model="selected"
+    :options="people"
+    size="md"
+    searchable
+    searchable-placeholder="Search a person..."
+    :class="{ '!p-0.5 [&>*>*>ul]:!w-60': collapsed }"
+    clear-search-on-close
+  >
+    <template v-if="collapsed">
+      <UAvatar v-bind="selected.avatar" size="md" />
+    </template>
+
+    <template v-if="!collapsed" #leading>
+      <UIcon
+        v-if="selected.icon"
+        :name="selected.icon as string"
+        class="w-5 h-5"
+      />
+
+      <UAvatar
+        v-else-if="selected.avatar"
+        v-bind="selected.avatar"
+        size="2xs"
+      />
+    </template>
+  </USelectMenu>
 </template>

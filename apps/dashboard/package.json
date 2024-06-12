@@ -11,24 +11,19 @@
     "start": "node .output/server/index.mjs"
   },
   "dependencies": {
-    "@tanstack/vue-table": "^8.17.3",
+    "@iconify-json/mage": "^1.1.0",
+    "@nuxt/ui": "^2.16.0",
     "@vee-validate/zod": "^4.12.8",
-    "@vueuse/core": "^10.9.0",
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.1.1",
-    "lucide-vue-next": "^0.379.0",
+    "@vueuse/core": "^10.11.0",
     "nuxt": "^3.11.2",
     "nuxt-icon": "^0.6.10",
-    "radix-vue": "^1.8.1",
-    "shadcn-nuxt": "^0.10.4",
-    "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "vee-validate": "^4.12.8",
     "vue": "^3.4.27",
     "vue-router": "^4.3.2",
     "zod": "^3.23.3"
   },
   "devDependencies": {
+    "@nuxtjs/apollo": "5.0.0-alpha.14",
     "@nuxtjs/tailwindcss": "^6.12.0",
     "typescript": "^5.1.3"
   },
