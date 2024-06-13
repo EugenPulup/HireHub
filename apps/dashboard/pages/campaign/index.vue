@@ -8,6 +8,8 @@ definePageMeta({
 
 <template>
   <div>
-    <NuxtLink :to="{ name: 'campaign-create' }">Create Campaign</NuxtLink>
+    <NuxtLink :to="{ name: 'campaign-create' }"
+      ><UButton variant="solid">Create Campaign</UButton></NuxtLink
+    >
   </div>
 </template>

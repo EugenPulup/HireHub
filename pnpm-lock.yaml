@@ -16,6 +16,9 @@ importers:
       '@nuxt/ui':
         specifier: ^2.16.0
         version: 2.16.0(nuxt@3.12.1)(vite@5.2.13)(vue@3.4.27)
+      '@nuxtjs/device':
+        specifier: ^3.1.1
+        version: 3.1.1
       '@vee-validate/zod':
         specifier: ^4.12.8
         version: 4.13.1(vue@3.4.27)
@@ -3353,6 +3356,17 @@ packages:
       pathe: 1.1.2
       pkg-types: 1.1.1
       semver: 7.6.2
+    transitivePeerDependencies:
+      - magicast
+      - rollup
+      - supports-color
+    dev: false
+
+  /@nuxtjs/device@3.1.1:
+    resolution: {integrity: sha512-wHTziEevt1hdgePQwPhEedWW3COalhP0YGVB+sGLqSrKujX8vdz7lcBFB01KIftpaP8kY5H8pssibNaJbxGcYw==}
+    dependencies:
+      '@nuxt/kit': 3.12.1(magicast@0.3.4)
+      defu: 6.1.4
     transitivePeerDependencies:
       - magicast
       - rollup

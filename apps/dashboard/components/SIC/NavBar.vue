@@ -1,4 +1,5 @@
 <script setup>
+const { isMobileOrTablet } = useDevice();
 const links = [
   { name: "Dashboard", path: "/", icon: "i-mage-dashboard-bar" },
   { name: "Campaign", path: "/campaign", icon: "i-mage-megaphone-a" },
@@ -7,15 +8,16 @@ const links = [
 
 <template>
   <MoleculeResizableWrapper
-    class="flex flex-col gap-2 w-full h-screen relative"
+    class="flex flex-col gap-2 w-full relative"
     :min-width="200"
     :max-width="300"
     :collapsed-width="60"
     :center-collapsed="true"
+    :freeze-collapsed="isMobileOrTablet"
   >
     <template #default="{ isCollapsed }">
       <MoleculeSelectAccount
-        class="basis-14 grid place-items-center px-2 border-b-[1px]"
+        class="basis-14 grid place-items-center content-center px-2 border-b-[1px]"
         :collapsed="isCollapsed"
       />
 

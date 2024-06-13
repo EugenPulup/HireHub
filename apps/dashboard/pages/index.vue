@@ -7,7 +7,5 @@ definePageMeta({
 </script>
 
 <template>
-  <div>
-    <Button :variant="'default'"> Home </Button>
-  </div>
+  <USkeleton class="h-96" />
 </template>

@@ -9,6 +9,6 @@ definePageMeta({
 
 <template>
   <div>
-    <Button :variant="'default'"> Campaign </Button>
+    <UButton :variant="'default'"> Campaign </UButton>
   </div>
 </template>

@@ -2,7 +2,13 @@
 export default defineNuxtConfig({
   ssr: false,
   devtools: { enabled: true },
-  modules: ["nuxt-icon", "@nuxtjs/apollo", "@nuxt/ui", "@nuxtjs/tailwindcss"],
+  modules: [
+    "nuxt-icon",
+    "@nuxtjs/apollo",
+    "@nuxt/ui",
+    "@nuxtjs/tailwindcss",
+    "@nuxtjs/device",
+  ],
 
   pages: true,
 
