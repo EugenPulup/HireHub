@@ -44,7 +44,7 @@ const selected = ref(people[0]);
     size="md"
     searchable
     searchable-placeholder="Search a person..."
-    :class="{ '!p-0.5 [&>*>*>ul]:!w-60': collapsed }"
+    :class="{ '[&>*>*>ul]:!w-60': collapsed }"
     clear-search-on-close
   >
     <template v-if="collapsed">

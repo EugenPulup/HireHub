@@ -7,16 +7,17 @@ const links = [
 
 <template>
   <MoleculeResizableWrapper
-    class="flex flex-col w-full py-3 h-screen gap-3 relative"
+    class="flex flex-col w-full h-screen relative"
     :min-width="200"
     :max-width="300"
     :collapsed-width="60"
     :center-collapsed="true"
   >
     <template #default="{ isCollapsed }">
-      <MoleculeSelectAccount class="px-2" :collapsed="isCollapsed" />
-
-      <UDivider />
+      <MoleculeSelectAccount
+        class="basis-14 grid place-items-center px-2 border-b-[1px]"
+        :collapsed="isCollapsed"
+      />
 
       <div
         v-for="link in links"
