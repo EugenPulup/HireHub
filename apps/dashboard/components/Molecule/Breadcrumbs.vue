@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { RouteRecordNormalized } from "vue-router";
-
 const router = useRouter();
 const route = useRoute();
-const breadcrumbs = ref([]) as Ref<RouteRecordNormalized[]>;
+const breadcrumbs = ref([]) as Ref<
+  { icon: string; label: string; to: string }[]
+>;
 
 watch(
   () => route.name,
@@ -14,11 +14,13 @@ watch(
     let hasNextRoute = true;
     let currentRoute = allRoutes.find((item) => item.name === route.name);
 
-    let count = 0;
-
     while (hasNextRoute) {
       if (currentRoute) {
-        breadcrumbs.value.unshift(currentRoute);
+        breadcrumbs.value.unshift({
+          label: currentRoute?.meta?.title as string,
+          to: currentRoute.path,
+          icon: currentRoute.meta.icon as string,
+        });
 
         if (!currentRoute.meta.parent) {
           hasNextRoute = false;
@@ -40,19 +42,5 @@ watch(
 </script>
 
 <template>
-  <Breadcrumb v-if="breadcrumbs.length">
-    <BreadcrumbList>
-      <template v-for="(item, index) of breadcrumbs" :key="item.name">
-        <BreadcrumbSeparator v-if="!!index" />
-
-        <BreadcrumbItem>
-          <BreadcrumbLink>
-            <NuxtLink :to="{ name: item.name }">
-              {{ item.meta.title }}
-            </NuxtLink>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-      </template>
-    </BreadcrumbList>
-  </Breadcrumb>
+  <UBreadcrumb :links="breadcrumbs" />
 </template>

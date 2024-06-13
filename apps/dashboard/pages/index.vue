@@ -2,6 +2,7 @@
 definePageMeta({
   name: "index",
   title: "Dashboard",
+  icon: "i-mage-dashboard-bar",
 });
 </script>
 
