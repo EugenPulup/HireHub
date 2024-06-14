@@ -15,7 +15,7 @@ export default defineNuxtConfig({
   components: true,
 
   ui: {
-    icons: ["mage"],
+    icons: ["mage", "bxl"],
   },
 
   apollo: {

@@ -79,7 +79,7 @@ defineExpose({
       <span
         v-if="isHovering || isDragging"
         ref="dragger"
-        class="absolute top-1/2 -right-3 h-6 w-1 rounded-full bg-gray-400 cursor-col-resize select-none"
+        class="absolute top-1/2 -right-2 h-6 w-1 rounded-full bg-gray-400 cursor-col-resize select-none"
       ></span>
     </Transition>
   </div>

@@ -10,6 +10,9 @@ importers:
 
   apps/dashboard:
     dependencies:
+      '@iconify-json/bxl':
+        specifier: ^1.1.10
+        version: 1.1.10
       '@iconify-json/mage':
         specifier: ^1.1.0
         version: 1.1.0
@@ -1763,6 +1766,12 @@ packages:
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
     deprecated: Use @eslint/object-schema instead
     dev: true
+
+  /@iconify-json/bxl@1.1.10:
+    resolution: {integrity: sha512-/+9L0XBI7vvP8tU2NVfqr45BjUndbTEaDuU6PERn9zKH0Rtsi9GDpaba7FY8PgA91ugGIpuwUPsFLCofkYreNg==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: false
 
   /@iconify-json/heroicons@1.1.21:
     resolution: {integrity: sha512-A+3L4KN+TjH3V8fQ2N2dkOOnLLxMgMBzO8RDT0P9YL+YzvLMIbe/lkDLSB8NB8x0DKWmkvTimoo1l4DKMwi7Zg==}
