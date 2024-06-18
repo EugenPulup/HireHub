@@ -56,6 +56,10 @@ const endTypeList = ref<CampaignEndType[]>(["COUNT", "DATE", "NEVER"]);
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   // Do something with data
+  const { data } = await useAsyncQuery(
+    useGraphQueries.CAMPAIGN.CREATE,
+    event.data
+  );
   console.log(event.data);
 }
 </script>
