@@ -58,41 +58,13 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   // Do something with data
   // console.log(event.data);
 
-  const { mutate, error } = useMutation(
-    gql`
-      mutation CreateNewCampaign {
-        createCampaign(
-          createCampaignInput: {
-            name: "Summer Sale"
-            keyword: "summer2024"
-            providers: ["WORKUA"]
-            status: "ACTIVE"
-            endType: "DATE"
-            endValue: 30
-          }
-        ) {
-          id
-          name
-          keyword
-          providers
-          status
-          endType
-          endValue
-        }
-      }
-    `,
-    {
-      variables: {
-        name: "Summer Sale",
-        keyword: "summer2024",
-        providers: ["WORKUA"],
-        status: "ACTIVE",
-        endType: "DATE",
-        endValue: 30,
-      },
-      clientId: "default",
-    }
-  );
+  const { mutate, error } = useMutation(useGraphQueries().CAMPAIGN.CREATE, {
+    variables: {
+      ...event.data,
+      endValue: 30,
+    },
+    clientId: "default",
+  });
 
   const result = await mutate().catch((error) => {
     console.error(error);
@@ -101,11 +73,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   console.log(error.value);
   console.log(result?.data);
 
-  // toast.add({
-  //   title: status.value === "success" ? "Success" : "Error",
-  //   description: status.value === "success" ? "Campaign created" : error.value,
-  //   color: status.value === "success" ? "primary" : "red",
-  // });
+  toast.add({
+    title: status.value === "success" ? "Success" : "Error",
+    description: status.value === "success" ? "Campaign created" : error.value,
+    color: status.value === "success" ? "primary" : "red",
+  });
 }
 </script>
 
