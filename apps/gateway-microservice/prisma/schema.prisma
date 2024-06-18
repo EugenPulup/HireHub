@@ -20,7 +20,7 @@ model Campaign {
   providers Providers[]
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
-  status    CampaignStatus  @default(PAUSED)
+  status    CampaignStatus  @default(ACTIVE)
   endType   CampaignEndType @default(NEVER)
   endValue  Int?
 }
