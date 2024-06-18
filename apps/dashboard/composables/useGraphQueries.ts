@@ -4,25 +4,18 @@ const queries = {
       mutation CreateNewCampaign {
         createCampaign(
           createCampaignInput: {
-            name: "Summer Sale"
-            keyword: "summer2024"
-            providers: ["WORKUA"]
-            createdAt: "2024-06-18T12:00:00Z"
-            updatedAt: "2024-06-18T12:00:00Z"
-            status: "ACTIVE"
-            endType: "DATE"
-            endValue: 30
+            name: $name
+            keyword: $keyword
+            providers: $providers
+            endType: $endType
           }
         ) {
           id
           name
           keyword
           providers
-          createdAt
-          updatedAt
           status
           endType
-          endValue
         }
       }
     `,
