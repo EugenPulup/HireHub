@@ -48,12 +48,6 @@ export class CreateCampaignInput {
   @Field(() => [String])
   providers: Providers[];
 
-  @Field(() => Date)
-  createdAt: Date;
-
-  @Field(() => Date)
-  updatedAt: Date;
-
   @Field(() => String)
   status: CampaignStatus;
 

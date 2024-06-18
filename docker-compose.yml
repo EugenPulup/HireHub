@@ -31,7 +31,7 @@ services:
     ports:
       - "3001:3000"
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
       RABBITMQ_URI: amqp://user:password@rabbitmq:5672
     depends_on:
       - rabbitmq
@@ -45,7 +45,7 @@ services:
     ports:
       - "3002:3000"
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
       RABBITMQ_URI: amqp://user:password@rabbitmq:5672
       DATABASE_URL: postgresql://googieUser:googiePass@postgresDB:5432/googieDB?schema=public
     depends_on:

@@ -18,33 +18,41 @@ const form = ref<HTMLFormElement>();
 
 type Schema = z.output<typeof schema>;
 
+type Providers = "WORKUA" | "ROBOTAUA" | "LINKEDIN";
+
+type CampaignEndType = "NEVER" | "DATE" | "COUNT";
+
 const state = reactive<{
   name: string | undefined;
   keyword: string | undefined;
-  providers: string[];
+  providers: Providers[];
+  endType: CampaignEndType;
 }>({
   name: undefined,
   keyword: undefined,
-  providers: [],
+  providers: ["WORKUA"],
+  endType: "NEVER",
 });
 
 const providersList = ref<{ label: string; value: string; icon: string }[]>([
   {
     label: "LinkedIn",
-    value: "linkedin",
+    value: "LINKEDIN",
     icon: "i-bxl-linkedin-square",
   },
   {
     label: "Google",
-    value: "google",
+    value: "WORKUA",
     icon: "i-bxl-google",
   },
   {
     label: "Amazon",
-    value: "amazon",
+    value: "ROBOTAUA",
     icon: "i-bxl-amazon",
   },
 ]);
+
+const endTypeList = ref<CampaignEndType[]>(["COUNT", "DATE", "NEVER"]);
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   // Do something with data
@@ -87,6 +95,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             hint="Required"
             icon="i-mage-stars-c"
           />
+        </UFormGroup>
+
+        <UFormGroup
+          size="lg"
+          label="Trigger of end"
+          name="endType"
+          help="Define when campaign should be stopped"
+        >
+          <USelectMenu v-model="state.endType" :options="endTypeList" />
         </UFormGroup>
       </div>
 
