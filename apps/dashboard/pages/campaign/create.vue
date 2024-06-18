@@ -94,7 +94,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     }
   );
 
-  const result = await mutate();
+  const result = await mutate().catch((error) => {
+    console.error(error);
+  });
 
   console.log(error.value);
   console.log(result?.data);

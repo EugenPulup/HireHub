@@ -22,7 +22,8 @@ export default defineNuxtConfig({
     clients: {
       default: {
         httpEndpoint: process.env.GRAPHQL_URL || "http://localhost:3002",
-        browserHttpEndpoint: "/graphql",
+        browserHttpEndpoint: `${process.env.GRAPHQL_URL}/graphql`,
+
         connectToDevTools: true,
       },
     },
