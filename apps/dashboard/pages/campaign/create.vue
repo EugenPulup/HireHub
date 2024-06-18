@@ -56,9 +56,9 @@ const endTypeList = ref<CampaignEndType[]>(["COUNT", "DATE", "NEVER"]);
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   // Do something with data
-  console.log(event.data);
+  // console.log(event.data);
 
-  const { mutate, error } = await useMutation(
+  const { mutate, error } = useMutation(
     gql`
       mutation CreateNewCampaign {
         createCampaign(
@@ -90,13 +90,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         endType: "DATE",
         endValue: 30,
       },
+      clientId: "default",
     }
   );
 
   const result = await mutate();
 
   console.log(error.value);
-  console.log(result);
+  console.log(result?.data);
 
   // toast.add({
   //   title: status.value === "success" ? "Success" : "Error",
