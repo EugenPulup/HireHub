@@ -34,8 +34,6 @@ input CreateCampaignInput {
   name: String!
   keyword: String!
   providers: [String!]!
-  createdAt: DateTime!
-  updatedAt: DateTime!
   status: String!
   endType: String!
   endValue: Int
@@ -45,8 +43,6 @@ input UpdateCampaignInput {
   name: String
   keyword: String
   providers: [String!]
-  createdAt: DateTime
-  updatedAt: DateTime
   status: String
   endType: String
   endValue: Int

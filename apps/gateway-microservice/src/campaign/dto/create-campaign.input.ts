@@ -49,9 +49,6 @@ export class CreateCampaignInput {
   providers: Providers[];
 
   @Field(() => String)
-  status: CampaignStatus;
-
-  @Field(() => String)
   endType: CampaignEndType;
 
   @Field(() => Int, { nullable: true })
