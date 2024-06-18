@@ -15,5 +15,6 @@
         <slot />
       </section>
     </div>
+    <UNotifications />
   </section>
 </template>

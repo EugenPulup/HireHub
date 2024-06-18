@@ -13,7 +13,7 @@ const schema = z.object({
   keyword: z.string().min(6, "Must be at least 6 characters"),
   providers: z.array(z.string()).min(1, "At least one provider is required"),
 });
-
+const toast = useToast();
 const form = ref<HTMLFormElement>();
 
 type Schema = z.output<typeof schema>;
@@ -56,11 +56,53 @@ const endTypeList = ref<CampaignEndType[]>(["COUNT", "DATE", "NEVER"]);
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   // Do something with data
-  const { data } = await useAsyncQuery(
-    useGraphQueries.CAMPAIGN.CREATE,
-    event.data
-  );
   console.log(event.data);
+
+  const { mutate, error } = await useMutation(
+    gql`
+      mutation CreateNewCampaign {
+        createCampaign(
+          createCampaignInput: {
+            name: "Summer Sale"
+            keyword: "summer2024"
+            providers: ["WORKUA"]
+            status: "ACTIVE"
+            endType: "DATE"
+            endValue: 30
+          }
+        ) {
+          id
+          name
+          keyword
+          providers
+          status
+          endType
+          endValue
+        }
+      }
+    `,
+    {
+      variables: {
+        name: "Summer Sale",
+        keyword: "summer2024",
+        providers: ["WORKUA"],
+        status: "ACTIVE",
+        endType: "DATE",
+        endValue: 30,
+      },
+    }
+  );
+
+  const result = await mutate();
+
+  console.log(error.value);
+  console.log(result);
+
+  // toast.add({
+  //   title: status.value === "success" ? "Success" : "Error",
+  //   description: status.value === "success" ? "Campaign created" : error.value,
+  //   color: status.value === "success" ? "primary" : "red",
+  // });
 }
 </script>
 
