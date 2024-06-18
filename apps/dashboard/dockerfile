@@ -9,6 +9,8 @@ COPY package.json ./
 # Install pnpm
 COPY . .
 
+RUN git pull
+
 # Install dependencies
 
 RUN pnpm --filter dashboard install
