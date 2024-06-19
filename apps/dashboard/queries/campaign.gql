@@ -1,0 +1,10 @@
+query Campaign($offset: Int!, $limit: Int!) {
+  campaign(offset: $offset, limit: $limit) {
+    name
+    keyword
+    status
+    providers
+    endType
+    endValue
+  }
+}

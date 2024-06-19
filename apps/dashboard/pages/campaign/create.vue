@@ -55,29 +55,24 @@ const providersList = ref<{ label: string; value: string; icon: string }[]>([
 const endTypeList = ref<CampaignEndType[]>(["COUNT", "DATE", "NEVER"]);
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  // Do something with data
-  // console.log(event.data);
-
-  const { mutate, error } = useMutation(useGraphQueries().CAMPAIGN.CREATE, {
-    variables: {
-      ...event.data,
-      endValue: 30,
-    },
-    clientId: "default",
-  });
-
-  const result = await mutate().catch((error) => {
-    console.error(error);
-  });
-
-  console.log(error.value);
-  console.log(result?.data);
-
-  toast.add({
-    title: status.value === "success" ? "Success" : "Error",
-    description: status.value === "success" ? "Campaign created" : error.value,
-    color: status.value === "success" ? "primary" : "red",
-  });
+  // const { mutate, error } = useMutation(useGraphQueries().CAMPAIGN.CREATE, {
+  //   variables: {
+  //     createCampaignInput: {
+  //       ...event.data,
+  //       endValue: 30,
+  //     },
+  //   },
+  //   clientId: "default",
+  // });
+  // const result = await mutate();
+  // toast.add({
+  //   title: !result?.errors ? "Success" : "Error",
+  //   description: !result?.errors ? "Campaign created" : `Error: ${error.value}`,
+  //   color: !result?.errors ? "primary" : "red",
+  // });
+  // if (!result?.errors) {
+  //   navigateTo({ name: "campaign" });
+  // }
 }
 </script>
 

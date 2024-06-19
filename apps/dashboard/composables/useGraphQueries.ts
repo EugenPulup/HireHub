@@ -1,21 +1,24 @@
 const queries = {
   CAMPAIGN: {
     CREATE: gql`
-      mutation CreateNewCampaign {
-        createCampaign(
-          createCampaignInput: {
-            name: $name
-            keyword: $keyword
-            providers: $providers
-            endType: $endType
-          }
-        ) {
-          id
+      mutation CreateCampaign($createCampaignInput: CreateCampaignInput!) {
+        createCampaign(createCampaignInput: $createCampaignInput) {
+          endType
+          keyword
+          name
+          providers
+        }
+      }
+    `,
+    LIST: gql`
+      query Campaign($offset: Int!, $limit: Int!) {
+        campaign(offset: $offset, limit: $limit) {
           name
           keyword
-          providers
           status
+          providers
           endType
+          endValue
         }
       }
     `,

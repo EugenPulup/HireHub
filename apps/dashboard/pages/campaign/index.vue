@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { Campaign } from "@/types/campaign.d.ts";
+
 definePageMeta({
   name: "campaign",
   title: "Campaign",
@@ -8,23 +10,28 @@ definePageMeta({
 // Columns
 const columns = [
   {
-    key: "id",
-    label: "#",
+    key: "name",
+    label: "Name",
     sortable: true,
   },
   {
-    key: "title",
-    label: "Title",
+    key: "keyword",
+    label: "Keyword",
     sortable: true,
   },
   {
-    key: "completed",
+    key: "status",
     label: "Status",
     sortable: true,
   },
   {
-    key: "actions",
-    label: "Actions",
+    key: "providers",
+    label: "Providers",
+    sortable: true,
+  },
+  {
+    key: "endType",
+    label: "End Type",
     sortable: false,
   },
 ];
@@ -100,40 +107,25 @@ const resetFilters = () => {
 // Pagination
 const sort = ref({ column: "id", direction: "asc" as const });
 const page = ref(1);
-const pageCount = ref(10);
 const pageTotal = ref(200); // This value should be dynamic coming from the API
-const pageFrom = computed(() => (page.value - 1) * pageCount.value + 1);
+const pageFrom = computed(() => (page.value - 1) * variables.limit + 1);
 const pageTo = computed(() =>
-  Math.min(page.value * pageCount.value, pageTotal.value)
+  Math.min(page.value * variables.limit, pageTotal.value)
 );
 
-// Data
-const { data: todos, pending } = await useLazyAsyncData<
-  {
-    id: number;
-    title: string;
-    completed: string;
-  }[]
->(
-  "todos",
-  () =>
-    ($fetch as any)(
-      `https://jsonplaceholder.typicode.com/todos${searchStatus.value}`,
-      {
-        query: {
-          q: search.value,
-          _page: page.value,
-          _limit: pageCount.value,
-          _sort: sort.value.column,
-          _order: sort.value.direction,
-        },
-      }
-    ),
-  {
-    default: () => [],
-    watch: [page, search, searchStatus, pageCount, sort],
-  }
-);
+const variables = reactive({
+  offset: 0,
+  limit: 11,
+});
+await useAsyncGql({
+  operation: "launches",
+  variables: { limit: 5 },
+});
+const { data, pending } = await useAsyncGql("Campaign", variables);
+
+watch(data, (value) => {
+  console.log(value);
+});
 </script>
 
 <template>
@@ -174,7 +166,7 @@ const { data: todos, pending } = await useLazyAsyncData<
         <span class="text-sm leading-5">Rows per page:</span>
 
         <USelect
-          v-model="pageCount"
+          v-model="variables.limit"
           :options="[3, 5, 10, 20, 30, 40]"
           class="me-2 w-20"
           size="xs"
@@ -219,7 +211,7 @@ const { data: todos, pending } = await useLazyAsyncData<
     <UTable
       v-model="selectedRows"
       v-model:sort="sort"
-      :rows="todos"
+      :rows="data.campaign"
       :columns="columnsTable"
       :loading="pending"
       sort-asc-icon="i-heroicons-arrow-up"
@@ -281,7 +273,7 @@ const { data: todos, pending } = await useLazyAsyncData<
 
         <UPagination
           v-model="page"
-          :page-count="pageCount"
+          :page-count="variables.limit"
           :total="pageTotal"
           :ui="{
             wrapper: 'flex items-center gap-1',
