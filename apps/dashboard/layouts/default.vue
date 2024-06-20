@@ -11,7 +11,7 @@
         <MoleculeBreadcrumbs />
         <div id="nav-toolbar" />
       </div>
-      <section class="size-full py-2 px-3">
+      <section class="w-full py-2 px-3 h-[calc(100dvh-56px)] overflow-y-auto">
         <slot />
       </section>
     </div>

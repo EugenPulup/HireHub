@@ -23,3 +23,5 @@ logs
 .env.*
 !.env.example
 .dockerignore
+
+pnpm-lock.yaml

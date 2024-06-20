@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import type { Campaign } from "@/types/campaign.d.ts";
-
 definePageMeta({
   name: "campaign",
   title: "Campaign",
@@ -9,6 +7,11 @@ definePageMeta({
 
 // Columns
 const columns = [
+  {
+    key: "id",
+    label: "#",
+    sortable: false,
+  },
   {
     key: "name",
     label: "Name",
@@ -115,16 +118,13 @@ const pageTo = computed(() =>
 
 const variables = reactive({
   offset: 0,
-  limit: 11,
+  limit: 10,
 });
-await useAsyncGql({
-  operation: "launches",
-  variables: { limit: 5 },
-});
+
 const { data, pending } = await useAsyncGql("Campaign", variables);
 
-watch(data, (value) => {
-  console.log(value);
+watch(page, (value) => {
+  variables.offset = (value - 1) * variables.limit;
 });
 </script>
 
@@ -166,8 +166,8 @@ watch(data, (value) => {
         <span class="text-sm leading-5">Rows per page:</span>
 
         <USelect
-          v-model="variables.limit"
-          :options="[3, 5, 10, 20, 30, 40]"
+          v-model.number="variables.limit"
+          :options="[3, 5, 10, 15, 20, 30, 40]"
           class="me-2 w-20"
           size="xs"
         />
@@ -224,34 +224,36 @@ watch(data, (value) => {
       }"
       @select="select"
     >
-      <template #completed-data="{ row }">
+      <template #status-data="{ row }">
         <UBadge
           size="xs"
-          :label="row.completed ? 'Completed' : 'In Progress'"
-          :color="row.completed ? 'emerald' : 'orange'"
+          :label="row.status === 'ACTIVE' ? 'Active' : 'Pause'"
+          :color="row.status ? 'emerald' : 'orange'"
           variant="subtle"
         />
       </template>
 
-      <template #actions-data="{ row }">
-        <UButton
-          v-if="!row.completed"
-          icon="i-heroicons-check"
-          size="2xs"
-          color="emerald"
-          variant="outline"
-          :ui="{ rounded: 'rounded-full' }"
-          square
+      <template #endType-data="{ row }">
+        <UBadge
+          v-if="row.endType === 'COUNT'"
+          size="xs"
+          :label="'Count'"
+          :color="'orange'"
+          variant="subtle"
         />
-
-        <UButton
+        <UBadge
+          v-else-if="row.endType === 'DATE'"
+          size="xs"
+          :label="'Date'"
+          color="lime"
+          variant="subtle"
+        />
+        <UBadge
           v-else
-          icon="i-heroicons-arrow-path"
-          size="2xs"
-          color="orange"
-          variant="outline"
-          :ui="{ rounded: 'rounded-full' }"
-          square
+          size="xs"
+          :label="'Never'"
+          color="rose"
+          variant="subtle"
         />
       </template>
     </UTable>

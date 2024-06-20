@@ -1,7 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
+
+  routeRules: {
+    "/**": { ssr: false },
+  },
+
   devtools: { enabled: true },
+
   modules: [
     "nuxt-icon",
     "@nuxt/ui",
@@ -14,9 +20,11 @@ export default defineNuxtConfig({
 
   components: true,
 
+  "graphql-client": {
+    watch: true,
+  },
+
   ui: {
     icons: ["mage", "bxl"],
   },
-
-  "graphql-client": {},
 });

@@ -1,4 +1,4 @@
 node_modules
 dist
 .dockerignore
-pnpm-lock.yaml
+*-lock.yaml
