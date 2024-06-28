@@ -11,6 +11,7 @@
     "start": "node .output/server/index.mjs"
   },
   "dependencies": {
+    "@graphql-codegen/typescript-vue-apollo": "^4.1.1",
     "@iconify-json/bxl": "^1.1.10",
     "@iconify-json/mage": "^1.1.0",
     "@nuxt/ui": "^2.16.0",
@@ -18,18 +19,18 @@
     "@vee-validate/zod": "^4.12.8",
     "@vueuse/core": "^10.11.0",
     "nuxt": "^3.12.2",
-    "nuxt-graphql-client": "^0.2.34",
+    "nuxt-graphql-client": "^0.2.35",
     "nuxt-icon": "^0.6.10",
     "tailwindcss-animate": "^1.0.7",
-    "vue": "^3.4.27",
+    "vue": "^3.4.31",
     "vue-router": "^4.3.2",
     "zod": "^3.23.3"
   },
   "devDependencies": {
+    "@nuxtjs/apollo": "5.0.0-alpha.14",
     "@nuxtjs/tailwindcss": "^6.12.0",
-    "typescript": "^5.4.5"
-  },
-  "overrides": {
-    "rollup": "npm:@rollup/wasm-node"
+    "typescript": "^5.5.2",
+    "vite-plugin-graphql-codegen": "^3.3.8",
+    "vite-plugin-graphql-loader": "^3.0.1"
   }
 }

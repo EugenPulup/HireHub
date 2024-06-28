@@ -1,4 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import graphqlLoader from "vite-plugin-graphql-loader";
+import codegen from "vite-plugin-graphql-codegen";
+
 export default defineNuxtConfig({
   ssr: false,
 
@@ -13,15 +16,41 @@ export default defineNuxtConfig({
     "@nuxt/ui",
     "@nuxtjs/tailwindcss",
     "@nuxtjs/device",
-    "nuxt-graphql-client",
+    "@nuxtjs/apollo",
   ],
 
   pages: true,
 
   components: true,
 
-  "graphql-client": {
-    watch: true,
+  vite: {
+    plugins: [
+      graphqlLoader(),
+      codegen({
+        runOnStart: false,
+        config: {
+          overwrite: true,
+          schema: "http://localhost:3002/graphql",
+          documents: "./queries/**/*.gql",
+
+          generates: {
+            "generated/graphql/": {
+              preset: "client",
+              plugins: ["typescript", "typescript-operations"],
+            },
+          },
+        },
+      }),
+    ],
+  },
+
+  apollo: {
+    clients: {
+      default: {
+        httpEndpoint: process.env.GQL_HOST || "http://localhost:3000/graphql",
+        browserHttpEndpoint: process.env.GQL_HOST,
+      },
+    },
   },
 
   ui: {

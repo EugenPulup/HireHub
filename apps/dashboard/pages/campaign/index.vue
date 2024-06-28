@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { CampaignDocument } from "@/generated/graphql/graphql.js";
+
 definePageMeta({
   name: "campaign",
   title: "Campaign",
@@ -121,7 +123,9 @@ const variables = reactive({
   limit: 10,
 });
 
-const { data, pending } = await useAsyncGql("Campaign", variables);
+const { data, pending } = await useAsyncQuery(CampaignDocument, variables);
+
+data.value?.campaign[0];
 
 watch(page, (value) => {
   variables.offset = (value - 1) * variables.limit;

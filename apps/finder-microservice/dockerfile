@@ -1,33 +1,36 @@
-# Base image
-FROM node:18 AS builder
+FROM node:18.14.2 AS base
 
-# Set the working directory
-WORKDIR /app
-
-# Copy package.json and pnpm-lock.yaml
-COPY package.json ./
-
-# Install pnpm
 RUN npm install -g pnpm
 
+WORKDIR /app
+
+# Copy package.json and pnpm-lock.yaml if you have it
+COPY package.json package.json
+
 # Install dependencies
+RUN pnpm install
+
+# Copy the rest of the application
 COPY . .
-RUN pnpm --filter finder-microservice install
 
-FROM builder AS dev
+# ===== Development Stage =====
+FROM base AS dev
+
+EXPOSE 3000 
+
+CMD [ "pnpm", "run", "start:dev" ]
+# ===== Development Stage =====
+
+# ===== Production Stage =====
+FROM base AS prod
+
+WORKDIR /app/apps/dashboard
 
 # Expose the port the app runs on
 EXPOSE 3000
 
-# Start the app
-CMD [ "pnpm", "--filter", "finder-microservice", "start:dev" ]
-
-FROM builder AS prod
 # Build the NestJS app
-RUN pnpm --filter finder-microservice build
+RUN pnpm build
 
-# Expose the port the app runs on
-EXPOSE 3000
-
-# Start the app
-CMD [ "pnpm", "--filter", "finder-microservice", "start:prod" ]
+CMD ["node", ".output/server/index.mjs"]
+# ===== Production Stage =====

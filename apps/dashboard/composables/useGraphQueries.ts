@@ -19,6 +19,7 @@ const queries = {
           providers
           endType
           endValue
+          id
         }
       }
     `,

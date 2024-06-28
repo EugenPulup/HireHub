@@ -1,3 +1,12 @@
+mutation CreateCampaign($createCampaignInput: CreateCampaignInput!) {
+  createCampaign(createCampaignInput: $createCampaignInput) {
+    endType
+    keyword
+    name
+    providers
+  }
+}
+
 query Campaign($offset: Int!, $limit: Int!) {
   campaign(offset: $offset, limit: $limit) {
     name
@@ -7,14 +16,5 @@ query Campaign($offset: Int!, $limit: Int!) {
     endType
     endValue
     id
-  }
-}
-
-mutation CreateCampaign($createCampaignInput: CreateCampaignInput!) {
-  createCampaign(createCampaignInput: $createCampaignInput) {
-    endType
-    keyword
-    name
-    providers
   }
 }

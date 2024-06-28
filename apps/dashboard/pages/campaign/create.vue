@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { CreateCampaignDocument } from "@/generated/graphql/graphql.js";
 import { z } from "zod";
 import type { FormSubmitEvent } from "#ui/types";
 
@@ -56,11 +57,13 @@ const providersList = ref<{ label: string; value: string; icon: string }[]>([
 const endTypeList = ref<CampaignEndType[]>(["COUNT", "DATE", "NEVER"]);
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  const result = await GqlCreateCampaign({
-    createCampaignInput: event.data,
+  const mutation = await useMutation(CreateCampaignDocument, {
+    variables: { createCampaignInput: event.data },
   });
 
-  const success = !!result?.createCampaign;
+  const result = await mutation.mutate();
+
+  const success = !result?.errors?.length;
 
   toast.add({
     title: success ? "Success" : "Error",

@@ -13,8 +13,8 @@ services:
 
   dashboard:
     build:
-      context: .
-      dockerfile: ./apps/dashboard/dockerfile
+      context: ./apps/dashboard
+      dockerfile: dockerfile
       target: dev
     container_name: dashboard
     restart: always
@@ -24,8 +24,8 @@ services:
 
   finder-microservice:
     build:
-      context: .
-      dockerfile: ./apps/finder-microservice/dockerfile
+      context: ./apps/finder-microservice
+      dockerfile: dockerfile
       target: dev
     container_name: finder-microservice
     ports:
@@ -38,8 +38,8 @@ services:
 
   gateway-microservice:
     build:
-      context: .
-      dockerfile: ./apps/gateway-microservice/dockerfile
+      context: ./apps/gateway-microservice
+      dockerfile: dockerfile
       target: dev
     container_name: gateway-microservice
     ports:

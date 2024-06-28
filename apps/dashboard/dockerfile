@@ -1,33 +1,37 @@
 FROM node:18.14.2 AS base
 
-WORKDIR /app
-
 RUN npm install -g pnpm
 
-COPY package.json ./
+WORKDIR /app
 
-# Install pnpm
-COPY . .
-
-RUN git pull
+# Copy package.json and pnpm-lock.yaml if you have it
+COPY package.json package.json
 
 # Install dependencies
+RUN pnpm install
 
-RUN pnpm --filter dashboard install
+# Copy the rest of the application
+COPY . .
 
+# ===== Development Stage =====
 FROM base AS dev
 
 EXPOSE 3000 
 EXPOSE 24678 
 
-CMD [ "pnpm", "--filter", "dashboard", "dev" ]
+CMD [ "pnpm", "run", "dev" ]
+# ===== Development Stage =====
 
+# ===== Production Stage =====
 FROM base AS prod
 
-# Build the NestJS app
-RUN pnpm build
+WORKDIR /app/apps/dashboard
 
 # Expose the port the app runs on
 EXPOSE 3000
 
+# Build the NestJS app
+RUN pnpm build
+
 CMD ["node", ".output/server/index.mjs"]
+# ===== Production Stage =====
