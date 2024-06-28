@@ -57,11 +57,9 @@ const providersList = ref<{ label: string; value: string; icon: string }[]>([
 const endTypeList = ref<CampaignEndType[]>(["COUNT", "DATE", "NEVER"]);
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  const mutation = await useMutation(CreateCampaignDocument, {
+  const result = await useMutation(CreateCampaignDocument, {
     variables: { createCampaignInput: event.data },
-  });
-
-  const result = await mutation.mutate();
+  }).mutate();
 
   const success = !result?.errors?.length;
 

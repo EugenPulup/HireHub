@@ -21,6 +21,9 @@ services:
     ports:
       - 3000:3000
       - 24678:24678
+    depends_on:
+      gateway-microservice:
+        condition: service_healthy
 
   finder-microservice:
     build:
@@ -42,6 +45,7 @@ services:
       dockerfile: dockerfile
       target: dev
     container_name: gateway-microservice
+    restart: unless-stopped
     ports:
       - "3002:3000"
     environment:
@@ -50,6 +54,12 @@ services:
       DATABASE_URL: postgresql://googieUser:googiePass@postgresDB:5432/googieDB?schema=public
     depends_on:
       - rabbitmq
+    healthcheck:
+      test: curl --fail http://localhost:3000
+      interval: 5s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
 
   postgresDB:
     image: postgres:latest

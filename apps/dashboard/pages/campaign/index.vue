@@ -39,6 +39,11 @@ const columns = [
     label: "End Type",
     sortable: false,
   },
+  {
+    key: "actions",
+    label: "Actions",
+    sortable: false,
+  },
 ];
 
 const selectedColumns = ref(columns);
@@ -259,6 +264,23 @@ watch(page, (value) => {
           color="rose"
           variant="subtle"
         />
+      </template>
+
+      <template #actions-data="{ row }">
+        <div class="flex gap-2">
+          <UButton
+            icon="i-mage-edit"
+            size="xs"
+            variant="outline"
+            color="primary"
+          />
+          <UButton
+            icon="i-mage-box-cross"
+            size="xs"
+            variant="outline"
+            color="red"
+          />
+        </div>
       </template>
     </UTable>
 

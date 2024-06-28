@@ -27,10 +27,11 @@ export default defineNuxtConfig({
     plugins: [
       graphqlLoader(),
       codegen({
-        runOnStart: false,
+        runOnStart: true,
+        runOnBuild: false,
         config: {
           overwrite: true,
-          schema: "http://localhost:3002/graphql",
+          schema: "http://gateway-microservice:3000/graphql",
           documents: "./queries/**/*.gql",
 
           generates: {
