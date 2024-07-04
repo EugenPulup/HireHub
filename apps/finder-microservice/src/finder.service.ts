@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Queue } from 'bull';
-import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
 
 import { Logger } from '@nestjs/common';
 
@@ -12,6 +12,10 @@ export class FinderService {
 
   getHello(): string {
     return 'Hello World!';
+  }
+
+  async getMetrics() {
+    return this.finderQueue.getMetrics('completed', 0, 10);
   }
 
   async processJob(data: object) {

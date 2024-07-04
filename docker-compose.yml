@@ -10,6 +10,12 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: user
       RABBITMQ_DEFAULT_PASS: password
+    healthcheck:
+      test: curl --fail http://localhost:5672
+      interval: 5s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
 
   dashboard:
     build:
@@ -31,11 +37,13 @@ services:
       dockerfile: dockerfile
       target: dev
     container_name: finder-microservice
+    restart: unless-stopped
     ports:
       - "3001:3000"
     environment:
       NODE_ENV: development
       RABBITMQ_URI: amqp://user:password@rabbitmq:5672
+      PORT: 3000
     depends_on:
       - rabbitmq
 
@@ -99,6 +107,50 @@ services:
     restart: unless-stopped
     networks:
       - postgres
+
+  prometheus:
+    container_name: prometheus
+    image: bitnami/prometheus:latest
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    ports:
+      - 3005:3000
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - 6379:6379
+
+  bull-metrics:
+    container_name: bull-metrics
+    image: igrek8/bullmq-prometheus:latest
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PROM_PREFIX=jobs
+    ports:
+      - 3009:3000
+    depends_on:
+      - redis
+
+  postgres-metrics:
+    container_name: postgres-metrics
+    image: prometheuscommunity/postgres-exporter
+    environment:
+      - DATA_SOURCE_NAME=postgresql://googieUser:googiePass@postgresDB:5432/googieDB?sslmode=disable
+    ports:
+      - 9187:9187
+    volumes:
+      - ./postgres_exporter.yml:/bin/postgres_exporter.yml
+    depends_on:
+      - postgresDB
 
 networks:
   default:

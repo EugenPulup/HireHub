@@ -1,15 +1,9 @@
-import {
-  Resolver,
-  Query,
-  Mutation,
-  Args,
-  Int,
-  InputType,
-} from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { CampaignService } from './campaign.service';
 import { Campaign } from './entities/campaign.entity';
 import { CreateCampaignInput } from './dto/create-campaign.input';
 import { UpdateCampaignInput } from './dto/update-campaign.input';
+import { ListCampaignInput } from './dto/list-campaign.input';
 
 @Resolver(() => Campaign)
 export class CampaignResolver {
@@ -23,11 +17,8 @@ export class CampaignResolver {
   }
 
   @Query(() => [Campaign], { name: 'campaign' })
-  findAll(
-    @Args('offset', { type: () => Int }) offset: number,
-    @Args('limit', { type: () => Int }) limit: number,
-  ) {
-    return this.campaignService.findAll(offset, limit);
+  findAll(@Args('ListCampaignInput') listCampaignInput: ListCampaignInput) {
+    return this.campaignService.findAll(listCampaignInput);
   }
 
   @Query(() => Campaign, { name: 'campaignById' })
@@ -37,12 +28,10 @@ export class CampaignResolver {
 
   @Mutation(() => Campaign)
   updateCampaign(
+    @Args('id', { type: () => String }) id: string,
     @Args('updateCampaignInput') updateCampaignInput: UpdateCampaignInput,
   ) {
-    return this.campaignService.update(
-      updateCampaignInput.id,
-      updateCampaignInput,
-    );
+    return this.campaignService.update(id, updateCampaignInput);
   }
 
   @Mutation(() => Campaign)

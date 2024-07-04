@@ -31,7 +31,8 @@ export default defineNuxtConfig({
         runOnBuild: false,
         config: {
           overwrite: true,
-          schema: "http://gateway-microservice:3000/graphql",
+          schema: "http://localhost:3002/graphql",
+          // schema: "http://gateway-microservice:3000/graphql",
           documents: "./queries/**/*.gql",
 
           generates: {
@@ -50,6 +51,10 @@ export default defineNuxtConfig({
       default: {
         httpEndpoint: process.env.GQL_HOST || "http://localhost:3000/graphql",
         browserHttpEndpoint: process.env.GQL_HOST,
+        connectToDevTools: true,
+        inMemoryCacheOptions: {
+          resultCaching: false,
+        },
       },
     },
   },

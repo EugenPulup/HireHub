@@ -20,13 +20,22 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Query {
-  campaign(offset: Int!, limit: Int!): [Campaign!]!
+  campaign(ListCampaignInput: ListCampaignInput!): [Campaign!]!
   campaignById(id: String!): Campaign!
+}
+
+input ListCampaignInput {
+  offset: Int!
+  limit: Int!
+  filterKey: String
+  filterValue: String
+  sortKey: String
+  sortValue: String
 }
 
 type Mutation {
   createCampaign(createCampaignInput: CreateCampaignInput!): Campaign!
-  updateCampaign(updateCampaignInput: UpdateCampaignInput!): Campaign!
+  updateCampaign(id: String!, updateCampaignInput: UpdateCampaignInput!): Campaign!
   removeCampaign(id: String!): Campaign!
 }
 
@@ -44,5 +53,4 @@ input UpdateCampaignInput {
   providers: [String!]
   endType: String
   endValue: Int
-  id: String!
 }

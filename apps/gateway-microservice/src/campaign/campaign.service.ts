@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCampaignInput } from './dto/create-campaign.input';
 import { UpdateCampaignInput } from './dto/update-campaign.input';
+import { ListCampaignInput } from './dto/list-campaign.input';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -13,10 +14,19 @@ export class CampaignService {
     });
   }
 
-  findAll(offset = 0 as number, limit = 10 as number) {
+  findAll({
+    filterValue,
+    filterKey,
+    sortValue,
+    sortKey,
+    offset,
+    limit,
+  }: ListCampaignInput) {
     return this.prisma.campaign.findMany({
       skip: offset,
       take: limit,
+      ...(filterKey && { where: { [filterKey]: filterValue } }),
+      ...(sortKey && { orderBy: { [sortKey]: sortValue } }),
     });
   }
 

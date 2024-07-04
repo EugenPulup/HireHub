@@ -2,31 +2,31 @@ import { NestFactory } from '@nestjs/core';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import { FinderModule } from './finder.module';
 import { Logger } from '@nestjs/common';
-import { AppClusterService } from './cluster.service';
+import { ConfigService } from '@nestjs/config';
 
 const logger = new Logger('Finder');
 
 async function bootstrap() {
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    FinderModule,
-    {
-      transport: Transport.RMQ,
-      options: {
-        urls: [process.env.RABBITMQ_URI],
-        queue: 'finder_jobs',
-        noAck: false,
-        prefetchCount: 1,
-        queueOptions: {
-          durable: false,
-        },
+  const app = await NestFactory.create(FinderModule);
+
+  const configService = app.get(ConfigService);
+
+  app.connectMicroservice({
+    transport: Transport.RMQ,
+    options: {
+      urls: [process.env.RABBITMQ_URI],
+      queue: 'finder_jobs',
+      noAck: false,
+      prefetchCount: 1,
+      queueOptions: {
+        durable: false,
       },
     },
-  );
+  });
 
-  logger.log('Microservice is listening');
+  await app.startAllMicroservices();
 
-  await app.listen();
+  await app.listen(3000);
 }
-bootstrap();
 
-// AppClusterService.clusterize(bootstrap);
+bootstrap();

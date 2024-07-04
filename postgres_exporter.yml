@@ -1,0 +1,8 @@
+auth_modules:
+  postgresDB: # Set this to any name you want
+    type: userpass
+    userpass:
+      username: googieUser
+      password: googiePass
+    options:
+      sslmode: disable

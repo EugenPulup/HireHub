@@ -7,8 +7,32 @@ mutation CreateCampaign($createCampaignInput: CreateCampaignInput!) {
   }
 }
 
-query Campaign($offset: Int!, $limit: Int!) {
-  campaign(offset: $offset, limit: $limit) {
+mutation UpdateCampaign(
+  $id: String!
+  $updateCampaignInput: UpdateCampaignInput!
+) {
+  updateCampaign(id: $id, updateCampaignInput: $updateCampaignInput) {
+    endType
+    keyword
+    name
+    providers
+  }
+}
+
+query Campaign($listCampaignInput: ListCampaignInput!) {
+  campaign(ListCampaignInput: $listCampaignInput) {
+    name
+    keyword
+    status
+    providers
+    endType
+    endValue
+    id
+  }
+}
+
+query CampaignById($id: String!) {
+  campaignById(id: $id) {
     name
     keyword
     status

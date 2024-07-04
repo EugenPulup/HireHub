@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import { CreateCampaignDocument } from "@/generated/graphql/graphql.js";
+import {
+  CreateCampaignDocument,
+  CampaignByIdDocument,
+  UpdateCampaignDocument,
+} from "@/generated/graphql/graphql.js";
 import { z } from "zod";
 import type { FormSubmitEvent } from "#ui/types";
 
+const { params } = useRoute();
+
 definePageMeta({
-  name: "campaign-create",
-  title: "Create",
+  name: `campaign-create`,
+  title: "Campaign",
   icon: "i-mage-file-plus",
   parent: "campaign",
 });
@@ -36,7 +42,7 @@ const state = reactive<{
   endType: "NEVER",
 });
 
-const providersList = ref<{ label: string; value: string; icon: string }[]>([
+const providersList = ref<{ label: string; value: Providers; icon: string }[]>([
   {
     label: "LinkedIn",
     value: "LINKEDIN",
@@ -57,20 +63,44 @@ const providersList = ref<{ label: string; value: string; icon: string }[]>([
 const endTypeList = ref<CampaignEndType[]>(["COUNT", "DATE", "NEVER"]);
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  const result = await useMutation(CreateCampaignDocument, {
-    variables: { createCampaignInput: event.data },
-  }).mutate();
+  const isUpdate = !!params.id;
+
+  const result = await useMutation(
+    isUpdate ? UpdateCampaignDocument : CreateCampaignDocument,
+    {
+      variables: isUpdate
+        ? { updateCampaignInput: event.data, id: params.id }
+        : { createCampaignInput: event.data },
+    }
+  ).mutate();
 
   const success = !result?.errors?.length;
 
   toast.add({
     title: success ? "Success" : "Error",
-    description: success ? "Campaign created" : `Error`,
+    description: success
+      ? `Campaign ${isUpdate ? "Updated" : "Created"}`
+      : `Error`,
     color: success ? "primary" : "red",
   });
 
   if (success) {
     navigateTo({ name: "campaign" });
+  }
+}
+
+if (params.id) {
+  const { data } = await useAsyncQuery(CampaignByIdDocument, {
+    id: params.id as string,
+  });
+
+  const campaign = data.value?.campaignById;
+
+  if (campaign) {
+    state.name = campaign.name;
+    state.keyword = campaign.keyword;
+    state.providers = [...campaign.providers] as Providers[];
+    state.endType = campaign.endType as CampaignEndType;
   }
 }
 </script>
@@ -139,7 +169,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                   : 'border-gray-400'
               "
               @click="
-                state.providers.includes(provider.value)
+                state.providers?.includes(provider.value)
                   ? state.providers.splice(
                       state.providers.indexOf(provider.value),
                       1

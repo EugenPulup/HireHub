@@ -1,29 +1,30 @@
-import { Processor, Process } from '@nestjs/bull';
-import { Job } from 'bull';
 import ScrapperFactory from './scenarios/workUa.scenario';
-
+import { Processor, WorkerHost } from '@nestjs/bullmq';
+import { Job } from 'bullmq';
 import { Logger } from '@nestjs/common';
 import puppeteer from 'puppeteer';
 import fs from 'fs'; // Import the 'fs' module
 
 const logger = new Logger('FinderService');
 
-@Processor('finder_jobs')
-export class FinderConsumer {
-  @Process({ name: 'scrap', concurrency: 1 })
-  async transcode(job: Job<{ name: string }>) {
+@Processor('finder_jobs', { concurrency: 5 })
+export class FinderConsumer extends WorkerHost {
+  async process(job: Job<any, any, string>) {
     try {
-      const browser = await puppeteer.launch();
+      await job.updateProgress(0);
+      await new Promise((r) => setTimeout(r, 5000));
+      await job.updateProgress(100);
+      // const browser = await puppeteer.launch();
 
-      const scrapper = new ScrapperFactory(browser, { name: job.data.name });
+      // const scrapper = new ScrapperFactory(browser, { name: job.data.name });
 
-      const response = await scrapper.parseWithAI();
+      // const response = await scrapper.parseWithAI();
 
-      await browser.close();
+      // await browser.close();
 
-      logger.log('Job done:', JSON.stringify(response));
+      logger.log('Job done:', job.data.name);
 
-      return response;
+      return true;
     } catch (error) {
       logger.error(error);
     }

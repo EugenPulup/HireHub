@@ -1,19 +1,22 @@
 <script lang="ts" setup>
 import { CampaignDocument } from "@/generated/graphql/graphql.js";
 
+import type { ListCampaignInput } from "@/generated/graphql/graphql.js";
+
 definePageMeta({
   name: "campaign",
-  title: "Campaign",
+  title: "Campaigns",
   icon: "i-mage-megaphone-a",
 });
 
+//================ CONST DATA ================//
 // Columns
 const columns = [
-  {
-    key: "id",
-    label: "#",
-    sortable: false,
-  },
+  // {
+  //   key: "id",
+  //   label: "#",
+  //   sortable: false,
+  // },
   {
     key: "name",
     label: "Name",
@@ -46,23 +49,6 @@ const columns = [
   },
 ];
 
-const selectedColumns = ref(columns);
-const columnsTable = computed(() =>
-  columns.filter((column) => selectedColumns.value.includes(column))
-);
-
-// Selected Rows
-const selectedRows = ref([]);
-
-function select(row) {
-  const index = selectedRows.value.findIndex((item) => item.id === row.id);
-  if (index === -1) {
-    selectedRows.value.push(row);
-  } else {
-    selectedRows.value.splice(index, 1);
-  }
-}
-
 // Actions
 const actions = [
   [
@@ -82,40 +68,47 @@ const actions = [
 ];
 
 // Filters
-const todoStatus = [
+const statuses = [
   {
-    key: "uncompleted",
-    label: "In Progress",
+    key: "ACTIVE",
+    label: "Active",
+    value: true,
+  },
+  {
+    key: "PAUSED",
+    label: "Paused",
     value: false,
   },
   {
-    key: "completed",
-    label: "Completed",
-    value: true,
+    key: "DELETED",
+    label: "Deleted",
+    value: false,
+  },
+  {
+    key: "ENDED",
+    label: "Ended",
+    value: false,
   },
 ];
 
+//================ VARIABLES ================//
+const selectedColumns = ref(columns);
+const columnsTable = computed(() =>
+  columns.filter((column) => selectedColumns.value.includes(column))
+);
+
+// Selected Rows
+const selectedRows = ref([]);
+
 const search = ref("");
 const selectedStatus = ref([]);
-const searchStatus = computed(() => {
-  if (selectedStatus.value?.length === 0) {
-    return "";
-  }
-
-  if (selectedStatus?.value?.length > 1) {
-    return `?completed=${selectedStatus.value[0].value}&completed=${selectedStatus.value[1].value}`;
-  }
-
-  return `?completed=${selectedStatus.value[0].value}`;
-});
-
 const resetFilters = () => {
   search.value = "";
   selectedStatus.value = [];
 };
 
 // Pagination
-const sort = ref({ column: "id", direction: "asc" as const });
+const sort = ref({ column: "name", direction: "asc" as const });
 const page = ref(1);
 const pageTotal = ref(200); // This value should be dynamic coming from the API
 const pageFrom = computed(() => (page.value - 1) * variables.limit + 1);
@@ -123,17 +116,43 @@ const pageTo = computed(() =>
   Math.min(page.value * variables.limit, pageTotal.value)
 );
 
-const variables = reactive({
+//================ REQUEST ================//
+const variables = reactive<ListCampaignInput>({
   offset: 0,
   limit: 10,
+  filterKey: null,
+  filterValue: null,
+  sortKey: sort.value.column,
+  sortValue: sort.value.direction,
 });
 
-const { data, pending } = await useAsyncQuery(CampaignDocument, variables);
+const { data, pending } = await useAsyncQuery(CampaignDocument, {
+  listCampaignInput: variables,
+});
 
-data.value?.campaign[0];
+//================ Functions ================//
+function selectRow(row) {
+  const index = selectedRows.value.findIndex((item) => item.id === row.id);
+  if (index === -1) {
+    selectedRows.value.push(row);
+  } else {
+    selectedRows.value.splice(index, 1);
+  }
+}
 
+//================ WATCHERS ================//
 watch(page, (value) => {
   variables.offset = (value - 1) * variables.limit;
+});
+
+watch(selectedStatus, () => {
+  variables.filterKey = "status";
+  variables.filterValue = selectedStatus.value[0]?.key;
+});
+
+watch(sort, (value) => {
+  variables.sortKey = value.column;
+  variables.sortValue = value.direction;
 });
 </script>
 
@@ -162,7 +181,7 @@ watch(page, (value) => {
 
       <USelectMenu
         v-model="selectedStatus"
-        :options="todoStatus"
+        :options="statuses"
         multiple
         placeholder="Status"
         class="w-40"
@@ -183,6 +202,15 @@ watch(page, (value) => {
       </div>
 
       <div class="flex gap-1.5 items-center">
+        <UButton
+          v-if="selectedRows.length >= 1"
+          icon="i-mage-box-cross"
+          size="xs"
+          variant="outline"
+          color="red"
+          >{{ selectedRows.length > 1 ? "Delete All" : "Delete" }}</UButton
+        >
+
         <UDropdown
           v-if="selectedRows.length > 1"
           :items="actions"
@@ -220,7 +248,7 @@ watch(page, (value) => {
     <UTable
       v-model="selectedRows"
       v-model:sort="sort"
-      :rows="data.campaign"
+      :rows="data?.campaign"
       :columns="columnsTable"
       :loading="pending"
       sort-asc-icon="i-heroicons-arrow-up"
@@ -231,7 +259,7 @@ watch(page, (value) => {
         td: { base: 'max-w-[0] truncate' },
         default: { checkbox: { color: 'gray' } },
       }"
-      @select="select"
+      @select="selectRow"
     >
       <template #status-data="{ row }">
         <UBadge
@@ -268,18 +296,15 @@ watch(page, (value) => {
 
       <template #actions-data="{ row }">
         <div class="flex gap-2">
-          <UButton
-            icon="i-mage-edit"
-            size="xs"
-            variant="outline"
-            color="primary"
-          />
-          <UButton
-            icon="i-mage-box-cross"
-            size="xs"
-            variant="outline"
-            color="red"
-          />
+          <NuxtLink :to="{ name: 'campaign-create', params: { id: row.id } }">
+            <UButton
+              icon="i-mage-edit"
+              size="xs"
+              variant="outline"
+              color="primary"
+              >Edit</UButton
+            >
+          </NuxtLink>
         </div>
       </template>
     </UTable>

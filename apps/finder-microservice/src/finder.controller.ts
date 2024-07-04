@@ -1,4 +1,5 @@
 import { Controller, Get, Inject } from '@nestjs/common';
+import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import {
   MessagePattern,
   Payload,
@@ -6,8 +7,11 @@ import {
   RmqContext,
 } from '@nestjs/microservices';
 import { FinderService } from './finder.service';
+import { Logger } from '@nestjs/common';
 
-@Controller()
+const logger = new Logger('FinderService');
+
+@Controller('/finder')
 export class FinderController {
   constructor(private readonly finderService: FinderService) {}
 
@@ -16,12 +20,17 @@ export class FinderController {
     return this.finderService.getHello();
   }
 
-  @MessagePattern('finder_job')
+  @Get('/metrics')
+  async getMetrics() {
+    return this.finderService.getMetrics();
+  }
+
+  @MessagePattern('finder_job', Transport.RMQ)
   async job(
     @Payload() data: number[],
     @Ctx() context: RmqContext,
   ): Promise<boolean> {
-    await new Promise((r) => setTimeout(r, 1000));
+    logger.log('Received Job!');
     const channel = context.getChannelRef();
     const originalMsg = context.getMessage();
 
