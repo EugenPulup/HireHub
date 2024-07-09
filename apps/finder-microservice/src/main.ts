@@ -14,8 +14,8 @@ async function bootstrap() {
   app.connectMicroservice({
     transport: Transport.RMQ,
     options: {
-      urls: [process.env.RABBITMQ_URI],
-      queue: 'finder_jobs',
+      urls: [configService.get('RABBITMQ_URI')],
+      queue: 'campaign:search',
       noAck: false,
       prefetchCount: 1,
       queueOptions: {

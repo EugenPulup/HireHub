@@ -5,10 +5,24 @@ import { FinderService } from './finder.service';
 import { FinderConsumer } from './finder.processor';
 import { ConfigModule } from '@nestjs/config';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
+import { Transport, ClientsModule } from '@nestjs/microservices';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    ClientsModule.register([
+      {
+        name: 'CANDIDATE_QUEUE',
+        transport: Transport.RMQ,
+        options: {
+          urls: [process.env.RABBITMQ_URI],
+          queue: 'candidate:save',
+          queueOptions: {
+            durable: false,
+          },
+        },
+      },
+    ]),
     BullModule.forRoot({
       connection: {
         host: 'redis',
@@ -16,7 +30,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
       },
     }),
     BullModule.registerQueue({
-      name: 'finder_jobs',
+      name: 'campaign:search',
     }),
     PrometheusModule.register(),
   ],

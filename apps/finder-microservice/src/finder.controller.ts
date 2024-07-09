@@ -25,7 +25,7 @@ export class FinderController {
     return this.finderService.getMetrics();
   }
 
-  @MessagePattern('finder_job', Transport.RMQ)
+  @MessagePattern('campaign:search', Transport.RMQ)
   async job(
     @Payload() data: number[],
     @Ctx() context: RmqContext,

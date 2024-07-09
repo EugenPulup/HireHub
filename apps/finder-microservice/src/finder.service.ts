@@ -8,7 +8,7 @@ const logger = new Logger('FinderService');
 
 @Injectable()
 export class FinderService {
-  constructor(@InjectQueue('finder_jobs') private finderQueue: Queue) {}
+  constructor(@InjectQueue('campaign:search') private finderQueue: Queue) {}
 
   getHello(): string {
     return 'Hello World!';

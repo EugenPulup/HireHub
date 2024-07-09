@@ -35,7 +35,7 @@ export class AppController {
       })
       .build();
 
-    this.rabbit_client.send('finder_job', record).subscribe(logger.log);
+    this.rabbit_client.send('campaign:search', record).subscribe(logger.log);
 
     console.log(job.name + ' job sent');
 
@@ -55,7 +55,7 @@ export class AppController {
 
     for (let i = 0; i < job.count; i++) {
       this.rabbit_client
-        .send('finder_job', {
+        .send('campaign:search', {
           name: 'job' + i,
         })
         .subscribe(logger.log);

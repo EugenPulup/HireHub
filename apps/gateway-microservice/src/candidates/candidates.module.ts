@@ -1,19 +1,17 @@
 import { Module } from '@nestjs/common';
-import { CampaignService } from './campaign.service';
-import { CampaignResolver } from './campaign.resolver';
-import { PrismaModule } from '../prisma/prisma.module';
+import { CandidatesService } from './candidates.service';
+import { CandidatesResolver } from './candidates.resolver';
 import { Transport, ClientsModule } from '@nestjs/microservices';
 
 @Module({
   imports: [
-    PrismaModule,
     ClientsModule.register([
       {
-        name: 'FINDER_SERVICE',
+        name: 'CANDIDATE_QUEUE',
         transport: Transport.RMQ,
         options: {
           urls: [process.env.RABBITMQ_URI],
-          queue: 'campaign:search',
+          queue: 'candidate:save',
           queueOptions: {
             durable: false,
           },
@@ -21,6 +19,6 @@ import { Transport, ClientsModule } from '@nestjs/microservices';
       },
     ]),
   ],
-  providers: [CampaignResolver, CampaignService],
+  providers: [CandidatesResolver, CandidatesService],
 })
-export class CampaignModule {}
+export class CandidatesModule {}

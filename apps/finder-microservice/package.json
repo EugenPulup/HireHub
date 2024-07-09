@@ -22,6 +22,8 @@
   },
   "dependencies": {
     "@apollo/server": "^4.10.4",
+    "@langchain/community": "^0.2.17",
+    "@langchain/core": "^0.2.14",
     "@nestjs/apollo": "^12.1.0",
     "@nestjs/bull": "^10.1.1",
     "@nestjs/bullmq": "^10.1.1",

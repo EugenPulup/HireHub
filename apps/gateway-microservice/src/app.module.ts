@@ -7,6 +7,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CandidatesModule } from './candidates/candidates.module';
 
 @Module({
   imports: [
@@ -18,13 +19,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         transport: Transport.RMQ,
         options: {
           urls: [process.env.RABBITMQ_URI],
-          queue: 'finder_jobs',
+          queue: 'campaign:search',
           queueOptions: {
             durable: false,
           },
         },
       },
     ]),
+
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       playground: true,
@@ -32,6 +34,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       include: [CampaignModule],
     }),
     PrometheusModule.register(),
+    CandidatesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
