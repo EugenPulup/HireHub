@@ -23,42 +23,49 @@ class OllamaParser implements Parser {
     this.schema = z.object({
       name: z.string().describe('The name of a person'),
       age: z.number().describe("The person's age"),
-      type_of_work: z
+      typeOfWork: z
         .string()
         .describe(
           "The person's type of work. (office, remote, part-time, etc.)",
         ),
       position: z.string().describe("The person's position"),
-      salary_expectation: z
+      salaryExpectation: z
         .number()
+        .default(0)
         .describe("The person's salary expectations"),
       skills: z.array(z.string()).describe("The person's skills"),
       location: z.optional(z.string()).describe("The person's location"),
       education: z
-        .object({
-          institution: z.string().describe("The person's institution"),
-          field_of_study: z.string().describe("The person's field of study"),
-          level: z.string().describe("The person's level of education"),
-          duration: z.string().describe("The person's duration of education"),
-          start_date: z
-            .string()
-            .describe("The person's start date of education"),
-          end_date: z.string().describe("The person's end date of education"),
-        })
+        .array(
+          z.object({
+            institution: z.string().describe("The person's institution"),
+            fieldOfStudy: z.string().describe("The person's field of study"),
+            level: z.string().describe("The person's level of education"),
+            duration: z.string().describe("The person's duration of education"),
+            startDate: z
+              .string()
+              .describe("The person's start date of education"),
+            endDate: z.string().describe("The person's end date of education"),
+          }),
+        )
         .describe("The person's education"),
       experience: z
-        .object({
-          company: z.string().describe("The person's company"),
-          position: z.string().describe("The person's position"),
-          duration: z.string().describe("The person's duration of experience"),
-          start_date: z
-            .string()
-            .describe("The person's start date of experience"),
-          end_date: z.string().describe("The person's end date of experience"),
-          description: z
-            .string()
-            .describe("The person's description of experience"),
-        })
+        .array(
+          z.object({
+            company: z.string().describe("The person's company"),
+            position: z.string().describe("The person's position"),
+            duration: z
+              .string()
+              .describe("The person's duration of experience"),
+            startDate: z
+              .string()
+              .describe("The person's start date of experience"),
+            endDate: z.string().describe("The person's end date of experience"),
+            description: z
+              .string()
+              .describe("The person's description of experience"),
+          }),
+        )
         .describe("The person's experience"),
       languages: z
         .optional(z.array(z.string()))

@@ -23,6 +23,49 @@ model Campaign {
   status    CampaignStatus  @default(ACTIVE)
   endType   CampaignEndType @default(NEVER)
   endValue  Int?
+  Candidate Candidate[]
+}
+
+model Candidate {
+  id                String   @id @default(cuid())
+  name              String
+  age               Int
+  typeOfWork        String
+  position          String
+  salaryExpectation Int      @default(0)
+  skills            String[]
+  location          String?
+  languages         String[]
+
+  campaign   Campaign @relation(fields: [campaignId], references: [id])
+  campaignId String
+
+  education  Education[]
+  experience Experience[]
+}
+
+model Education {
+  id           String    @id @default(cuid())
+  institution  String
+  fieldOfStudy String
+  level        String
+  duration     String
+  startDate    String
+  endDate      String
+  candidateId  String
+  Candidate    Candidate @relation(fields: [candidateId], references: [id])
+}
+
+model Experience {
+  id          String    @id @default(cuid())
+  company     String
+  position    String
+  duration    String
+  startDate   String
+  endDate     String
+  description String
+  candidate   Candidate @relation(fields: [candidateId], references: [id])
+  candidateId String
 }
 
 enum CampaignStatus {

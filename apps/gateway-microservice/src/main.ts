@@ -19,7 +19,6 @@ async function bootstrap() {
     options: {
       urls: [configService.get('RABBITMQ_URI')],
       queue: 'candidate:save',
-      noAck: false,
       prefetchCount: 1,
       queueOptions: {
         durable: false,

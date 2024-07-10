@@ -10,18 +10,12 @@ import {
   Ctx,
   RmqContext,
 } from '@nestjs/microservices';
+import { Inject } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Resolver(() => Candidate)
 export class CandidatesResolver {
   constructor(private readonly candidatesService: CandidatesService) {}
-
-  @MessagePattern('candidate:save', Transport.RMQ)
-  async createCandidate(
-    @Payload() data: CreateCandidateInput,
-    @Ctx() context: RmqContext,
-  ) {
-    this.candidatesService.create(data);
-  }
 
   @Query(() => [Candidate], { name: 'candidates' })
   findAll() {

@@ -38,7 +38,7 @@ services:
       - "${FINDER_PORT}:3000"
     environment:
       NODE_ENV: ${NODE_ENV}
-      RABBITMQ_URI: amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672
+      RABBITMQ_URI: amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:${RABBITMQ_PORT}
     depends_on:
       - rabbitmq
     extra_hosts:
@@ -56,7 +56,7 @@ services:
       - "${GATEWAY_PORT}:3000"
     environment:
       NODE_ENV: ${NODE_ENV}
-      RABBITMQ_URI: amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672
+      RABBITMQ_URI: amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:${RABBITMQ_PORT}
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgresDB:5432/${POSTGRES_DB}?schema=public
     depends_on:
       - rabbitmq

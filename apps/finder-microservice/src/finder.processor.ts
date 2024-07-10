@@ -14,6 +14,7 @@ export class FinderConsumer extends WorkerHost {
   constructor(@Inject('CANDIDATE_QUEUE') private rabbit_client: ClientProxy) {
     super();
   }
+
   async process(job: Job<any, any, string>) {
     try {
       await job.updateProgress(0);
@@ -25,23 +26,29 @@ export class FinderConsumer extends WorkerHost {
       const parser = new OllamaParser('mistrallite');
 
       for await (const result of scrapper.scrapByKeyword(job.data.keyword)) {
-        const candidate = await parser.parse(result);
+        try {
+          const candidate = await parser.parse(result);
 
-        const record = new RmqRecordBuilder({
-          // ...candidate,
-          campaign: job.data.id,
-        })
-          .setOptions({
-            headers: {
-              ['x-version']: '1.0.0',
-            },
-            priority: 3,
+          const record = new RmqRecordBuilder({
+            ...candidate,
+            campaignId: job.data.id,
           })
-          .build();
+            .setOptions({
+              headers: {
+                ['x-version']: '1.0.0',
+              },
+              priority: 1,
+            })
+            .build();
 
-        this.rabbit_client.send('candidate:save', record);
+          this.rabbit_client.send('candidate:save', record).subscribe();
 
-        logger.log('Send to RAbbitMQ ' + record);
+          logger.log('Send to Queue');
+        } catch (error) {
+          logger.log('Sending to Queue Failed');
+        } finally {
+          continue;
+        }
       }
 
       await job.updateProgress(100);
@@ -50,7 +57,8 @@ export class FinderConsumer extends WorkerHost {
 
       return true;
     } catch (error) {
-      logger.error(error);
+      logger.error(`Error in Processor: ${error}`);
+      job.moveToFailed(error, job.token);
     }
   }
 }
