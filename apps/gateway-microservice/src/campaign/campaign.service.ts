@@ -35,7 +35,7 @@ export class CampaignService {
     return campaign;
   }
 
-  findAll({
+  async findAll({
     filterValue,
     filterKey,
     sortValue,
@@ -43,7 +43,7 @@ export class CampaignService {
     offset,
     limit,
   }: ListCampaignInput) {
-    return this.prisma.campaign.findMany({
+    return await this.prisma.campaign.findMany({
       skip: offset,
       take: limit,
       ...(filterKey && { where: { [filterKey]: filterValue } }),

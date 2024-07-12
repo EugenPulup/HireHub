@@ -1,25 +1,18 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { CandidatesService } from './candidates.service';
 import { Candidate } from './entities/candidate.entity';
-import { CreateCandidateInput } from './dto/create-candidate.input';
 import { UpdateCandidateInput } from './dto/update-candidate.input';
-import { Transport } from '@nestjs/microservices';
-import {
-  MessagePattern,
-  Payload,
-  Ctx,
-  RmqContext,
-} from '@nestjs/microservices';
-import { Inject } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
 
 @Resolver(() => Candidate)
 export class CandidatesResolver {
   constructor(private readonly candidatesService: CandidatesService) {}
 
   @Query(() => [Candidate], { name: 'candidates' })
-  findAll() {
-    return this.candidatesService.findAll();
+  async findAll(
+    @Args('offset', { type: () => Int }) offset: number,
+    @Args('limit', { type: () => Int }) limit: number,
+  ) {
+    return await this.candidatesService.findAll(offset, limit);
   }
 
   @Query(() => Candidate, { name: 'candidate' })

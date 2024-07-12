@@ -33,18 +33,56 @@ export class CandidatesService {
       },
     });
 
+    let subWrites = [];
+
+    if (createCandidateInput.education) {
+      subWrites.push(
+        this.prisma.education.createMany({
+          data: createCandidateInput.education.map((item) => {
+            return {
+              candidateId: candidate.id,
+              ...item,
+            };
+          }),
+        }),
+      );
+    }
+
+    if (createCandidateInput.experience) {
+      subWrites.push(
+        this.prisma.experience.createMany({
+          data: createCandidateInput.experience.map((item) => {
+            return {
+              candidateId: candidate.id,
+              ...item,
+            };
+          }),
+        }),
+      );
+    }
+
+    await Promise.all(subWrites);
+
     return candidate;
   }
 
-  findAll() {}
+  async findAll(offset: number, limit: number) {
+    return this.prisma.candidate.findMany({
+      skip: offset,
+      take: limit,
+      select: {
+        education: true,
+        experience: true,
+        _count: true,
+      },
+    });
+  }
 
   findOne(id: number) {
     return `This action returns a #${id} candidate`;
   }
 
-  update(id: number, updateCandidateInput: UpdateCandidateInput) {
-    return `This action updates a #${id} candidate`;
-  }
+  update(id: number, updateCandidateInput: UpdateCandidateInput) {}
 
   remove(id: number) {
     return `This action removes a #${id} candidate`;

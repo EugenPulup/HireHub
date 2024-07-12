@@ -113,27 +113,27 @@ services:
       - CLICKHOUSE_USER=admin
       - CLICKHOUSE_PASSWORD=admin
 
-  analytic-db-gui:
-    container_name: analytic-db-gui
-    image: ghcr.io/caioricciuti/ch-ui:latest
-    environment:
-      - VITE_CLICKHOUSE_URL=analytic-db:8123
-    ports:
-      - 5521:5521
+  # analytic-db-gui:
+  #   container_name: analytic-db-gui
+  #   image: ghcr.io/caioricciuti/ch-ui:latest
+  #   environment:
+  #     - VITE_CLICKHOUSE_URL=analytic-db:8123
+  #   ports:
+  #     - 5521:5521
 
-  prometheus:
-    container_name: prometheus
-    image: bitnami/prometheus:latest
-    ports:
-      - ${PROMETHEUS_PORT}:9090
-    volumes:
-      - ./prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml
+  # prometheus:
+  #   container_name: prometheus
+  #   image: bitnami/prometheus:latest
+  #   ports:
+  #     - ${PROMETHEUS_PORT}:9090
+  #   volumes:
+  #     - ./prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml
 
-  grafana:
-    container_name: grafana
-    image: grafana/grafana:latest
-    ports:
-      - ${GRAFANA_PORT}:3000
+  # grafana:
+  #   container_name: grafana
+  #   image: grafana/grafana:latest
+  #   ports:
+  #     - ${GRAFANA_PORT}:3000
 
   redis:
     container_name: redis
@@ -141,29 +141,29 @@ services:
     ports:
       - ${REDIS_PORT}:6379
 
-  bull-metrics:
-    container_name: bull-metrics
-    image: igrek8/bullmq-prometheus:latest
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=${REDIS_PORT}
-      - PROM_PREFIX=jobs
-    ports:
-      - ${BULL_METRICS_PORT}:3000
-    depends_on:
-      - redis
+  # bull-metrics:
+  #   container_name: bull-metrics
+  #   image: igrek8/bullmq-prometheus:latest
+  #   environment:
+  #     - REDIS_HOST=redis
+  #     - REDIS_PORT=${REDIS_PORT}
+  #     - PROM_PREFIX=jobs
+  #   ports:
+  #     - ${BULL_METRICS_PORT}:3000
+  #   depends_on:
+  #     - redis
 
-  postgres-metrics:
-    container_name: postgres-metrics
-    image: prometheuscommunity/postgres-exporter
-    environment:
-      - DATA_SOURCE_NAME=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgresDB:5432/${POSTGRES_DB}?sslmode=disable
-    ports:
-      - ${POSTGRES_METRICS_PORT}:9187
-    volumes:
-      - ./postgres_exporter.yml:/bin/postgres_exporter.yml
-    depends_on:
-      - postgresDB
+  # postgres-metrics:
+  #   container_name: postgres-metrics
+  #   image: prometheuscommunity/postgres-exporter
+  #   environment:
+  #     - DATA_SOURCE_NAME=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgresDB:5432/${POSTGRES_DB}?sslmode=disable
+  #   ports:
+  #     - ${POSTGRES_METRICS_PORT}:9187
+  #   volumes:
+  #     - ./postgres_exporter.yml:/bin/postgres_exporter.yml
+  #   depends_on:
+  #     - postgresDB
 
   nginx:
     image: nginx:latest
@@ -177,9 +177,9 @@ services:
       - gateway-microservice
       - finder-microservice
       - pgadmin
-      - prometheus
-      - grafana
-      - bull-metrics
+      # - prometheus
+      # - grafana
+      # - bull-metrics
 
 networks:
   default:
