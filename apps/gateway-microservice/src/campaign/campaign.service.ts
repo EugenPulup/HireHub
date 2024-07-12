@@ -35,7 +35,7 @@ export class CampaignService {
     return campaign;
   }
 
-  async findAll({
+  findAll({
     filterValue,
     filterKey,
     sortValue,
@@ -43,12 +43,16 @@ export class CampaignService {
     offset,
     limit,
   }: ListCampaignInput) {
-    return await this.prisma.campaign.findMany({
+    return this.prisma.campaign.findMany({
       skip: offset,
       take: limit,
       ...(filterKey && { where: { [filterKey]: filterValue } }),
       ...(sortKey && { orderBy: { [sortKey]: sortValue } }),
     });
+  }
+
+  count() {
+    return this.prisma.campaign.count();
   }
 
   findOne(id: string) {
@@ -64,9 +68,13 @@ export class CampaignService {
     });
   }
 
-  remove(id: string) {
-    return this.prisma.campaign.delete({
-      where: { id },
+  remove(ids: string[]) {
+    return this.prisma.campaign.deleteMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
     });
   }
 }

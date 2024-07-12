@@ -1,4 +1,10 @@
-import { ObjectType, Field, Int, registerEnumType } from '@nestjs/graphql';
+import {
+  ObjectType,
+  Field,
+  Int,
+  registerEnumType,
+  createUnionType,
+} from '@nestjs/graphql';
 
 type Providers = 'WORKUA' | 'ROBOTAUA' | 'LINKEDIN';
 
@@ -34,4 +40,10 @@ export class Campaign {
 
   @Field(() => Int, { nullable: true })
   endValue?: number;
+}
+
+@ObjectType()
+export class Count {
+  @Field(() => Int)
+  count: number;
 }

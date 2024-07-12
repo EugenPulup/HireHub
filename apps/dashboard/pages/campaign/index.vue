@@ -1,7 +1,14 @@
 <script lang="ts" setup>
-import { CampaignDocument } from "@/generated/graphql/graphql.js";
+import {
+  CampaignDocument,
+  RemoveCampaignDocument,
+} from "@/generated/graphql/graphql.js";
 
-import type { ListCampaignInput } from "@/generated/graphql/graphql.js";
+import type {
+  ListCampaignInput,
+  Campaign,
+  CampaignQuery,
+} from "@/generated/graphql/graphql.js";
 
 definePageMeta({
   name: "campaign",
@@ -98,7 +105,7 @@ const columnsTable = computed(() =>
 );
 
 // Selected Rows
-const selectedRows = ref([]);
+const selectedRows = ref<Campaign[]>([]);
 
 const search = ref("");
 const selectedStatus = ref([]);
@@ -126,9 +133,19 @@ const variables = reactive<ListCampaignInput>({
   sortValue: sort.value.direction,
 });
 
-const { data, pending } = await useAsyncQuery(CampaignDocument, {
-  listCampaignInput: variables,
-});
+const {
+  refetch: execute,
+  loading: pending,
+  result: data,
+} = await useQuery<CampaignQuery>(
+  CampaignDocument,
+  {
+    listCampaignInput: variables,
+  },
+  {
+    fetchPolicy: "no-cache",
+  }
+);
 
 //================ Functions ================//
 function selectRow(row) {
@@ -137,6 +154,19 @@ function selectRow(row) {
     selectedRows.value.push(row);
   } else {
     selectedRows.value.splice(index, 1);
+  }
+}
+
+async function deleteCampaigns() {
+  const result = await useMutation(RemoveCampaignDocument, {
+    variables: {
+      removeCampaignId: selectedRows.value.map((el) => el?.id),
+    },
+  }).mutate();
+
+  if (result?.data?.removeCampaign) {
+    selectedRows.value = [];
+    execute();
   }
 }
 
@@ -153,6 +183,12 @@ watch(selectedStatus, () => {
 watch(sort, (value) => {
   variables.sortKey = value.column;
   variables.sortValue = value.direction;
+});
+
+watch(data, (value) => {
+  if (value) {
+    pageTotal.value = value.campaignCount.count;
+  }
 });
 </script>
 
@@ -208,6 +244,7 @@ watch(sort, (value) => {
           size="xs"
           variant="outline"
           color="red"
+          @click="deleteCampaigns"
           >{{ selectedRows.length > 1 ? "Delete All" : "Delete" }}</UButton
         >
 

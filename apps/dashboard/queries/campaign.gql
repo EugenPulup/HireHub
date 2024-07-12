@@ -19,6 +19,10 @@ mutation UpdateCampaign(
   }
 }
 
+mutation RemoveCampaign($removeCampaignId: [String!]!) {
+  removeCampaign(id: $removeCampaignId)
+}
+
 query Campaign($listCampaignInput: ListCampaignInput!) {
   campaign(ListCampaignInput: $listCampaignInput) {
     name
@@ -28,6 +32,10 @@ query Campaign($listCampaignInput: ListCampaignInput!) {
     endType
     endValue
     id
+  }
+
+  campaignCount {
+    count
   }
 }
 

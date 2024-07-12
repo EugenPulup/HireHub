@@ -28,11 +28,11 @@ export default defineNuxtConfig({
       graphqlLoader(),
       codegen({
         runOnStart: true,
-        runOnBuild: false,
+        runOnBuild: true,
         config: {
           overwrite: true,
-          schema: "http://localhost:3002/graphql",
-          // schema: "http://gateway-microservice:3000/graphql",
+          // schema: "http://localhost:3002/graphql",
+          schema: process.env.GQL_HOST,
           documents: "./queries/**/*.gql",
 
           generates: {
@@ -52,6 +52,11 @@ export default defineNuxtConfig({
         httpEndpoint: process.env.GQL_HOST || "http://localhost:3000/graphql",
         browserHttpEndpoint: process.env.GQL_HOST,
         connectToDevTools: true,
+        defaultOptions: {
+          query: {
+            fetchPolicy: "no-cache",
+          },
+        },
         inMemoryCacheOptions: {
           resultCaching: false,
         },
