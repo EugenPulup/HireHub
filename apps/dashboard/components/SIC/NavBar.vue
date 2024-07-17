@@ -3,6 +3,7 @@ const { isMobileOrTablet } = useDevice();
 const links = [
   { name: "Dashboard", path: "/", icon: "i-mage-dashboard-bar" },
   { name: "Campaign", path: "/campaign", icon: "i-mage-megaphone-a" },
+  { name: "Candidates", path: "/candidates", icon: "i-mage-users" },
 ];
 </script>
 

@@ -1,0 +1,11 @@
+query Candidates($offset: Int!, $limit: Int!) {
+  candidates(offset: $offset, limit: $limit) {
+    name
+    position
+    salaryExpectation
+  }
+
+  candidatesCount {
+    count
+  }
+}

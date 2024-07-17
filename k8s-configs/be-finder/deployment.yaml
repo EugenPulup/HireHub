@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finder-microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: finder-microservice
+  template:
+    metadata:
+      labels:
+        app: finder-microservice
+    spec:
+      containers:
+        - name: finder-microservice
+          image: finder-microservice:latest # You'll need to build and push this image
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: NODE_ENV
+            - name: RABBITMQ_URI
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: uri

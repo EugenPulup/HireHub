@@ -11,8 +11,8 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 RUN pnpm run -r build
 RUN pnpm deploy --filter=dashboard --prod /prod/dashboard
-RUN pnpm deploy --filter=finder-microservice --prod /prod/finder-microservice
-RUN pnpm deploy --filter=gateway-microservice --prod /prod/gateway-microservice
+RUN pnpm deploy --filter=be-finder --prod /prod/be-finder
+RUN pnpm deploy --filter=be-gateway --prod /prod/be-gateway
 # ======= BUILD =======
 
 
@@ -33,8 +33,8 @@ CMD [ "pnpm", "dev" ]
 # ======= FINDER =======
 FROM base AS finder
 
-COPY --from=build /prod/finder-microservice /prod/finder-microservice
-WORKDIR /prod/finder-microservice
+COPY --from=build /prod/be-finder /prod/be-finder
+WORKDIR /prod/be-finder
 
 EXPOSE 3000
 
@@ -45,8 +45,8 @@ CMD [ "pnpm", "start:dev" ]
 # ======= GATEWAY =======
 FROM base AS gateway
 
-COPY --from=build /prod/gateway-microservice /prod/gateway-microservice
-WORKDIR /prod/gateway-microservice
+COPY --from=build /prod/be-gateway /prod/be-gateway
+WORKDIR /prod/be-gateway
 
 EXPOSE 3000
 
