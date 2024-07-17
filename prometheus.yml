@@ -6,12 +6,12 @@ scrape_configs:
   - job_name: "be-gateway"
     metrics_path: "/metrics"
     static_configs:
-      - targets: ["gateway-microservice:3000"]
+      - targets: [be-gateway:3000"]
 
   - job_name: "be-finder"
     metrics_path: "/metrics"
     static_configs:
-      - targets: ["finder-microservice:3000"]
+      - targets: ["be-finder:3000"]
 
   - job_name: "be-bullmq"
     metrics_path: "/metrics"

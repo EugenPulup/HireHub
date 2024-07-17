@@ -99,6 +99,7 @@ const statuses = [
 ];
 
 //================ VARIABLES ================//
+const toast = useToast();
 const selectedColumns = ref(columns);
 const columnsTable = computed(() =>
   columns.filter((column) => selectedColumns.value.includes(column))
@@ -165,7 +166,14 @@ async function deleteCampaigns() {
   }).mutate();
 
   if (result?.data?.removeCampaign) {
+    toast.add({
+      title: "Success",
+      description: `Deleted ${selectedRows.value.length} campaigns`,
+      color: "primary",
+    });
+
     selectedRows.value = [];
+
     execute();
   }
 }

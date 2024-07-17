@@ -1,13 +1,10 @@
 <script lang="ts" setup>
-import {
-  CampaignDocument,
-  RemoveCampaignDocument,
-} from "@/generated/graphql/graphql.js";
+import { CandidatesDocument } from "@/generated/graphql/graphql.js";
 
 import type {
-  ListCampaignInput,
-  Campaign,
-  CampaignQuery,
+  CandidatesQuery,
+  Candidate,
+  CandidatesQueryVariables,
 } from "@/generated/graphql/graphql.js";
 
 definePageMeta({
@@ -30,25 +27,25 @@ const columns = [
     sortable: true,
   },
   {
-    key: "keyword",
-    label: "Keyword",
+    key: "position",
+    label: "Position",
     sortable: true,
   },
   {
-    key: "status",
-    label: "Status",
+    key: "salaryExpectation",
+    label: "Salary",
     sortable: true,
   },
-  {
-    key: "providers",
-    label: "Providers",
-    sortable: true,
-  },
-  {
-    key: "endType",
-    label: "End Type",
-    sortable: false,
-  },
+  // {
+  //   key: "providers",
+  //   label: "Providers",
+  //   sortable: true,
+  // },
+  // {
+  //   key: "endType",
+  //   label: "End Type",
+  //   sortable: false,
+  // },
   {
     key: "actions",
     label: "Actions",
@@ -105,7 +102,7 @@ const columnsTable = computed(() =>
 );
 
 // Selected Rows
-const selectedRows = ref<Campaign[]>([]);
+const selectedRows = ref<Candidate[]>([]);
 
 const search = ref("");
 const selectedStatus = ref([]);
@@ -124,7 +121,7 @@ const pageTo = computed(() =>
 );
 
 //================ REQUEST ================//
-const variables = reactive<ListCampaignInput>({
+const variables = reactive<CandidatesQueryVariables>({
   offset: 0,
   limit: 10,
   filterKey: null,
@@ -137,15 +134,9 @@ const {
   refetch: execute,
   loading: pending,
   result: data,
-} = await useQuery<CampaignQuery>(
-  CampaignDocument,
-  {
-    listCampaignInput: variables,
-  },
-  {
-    fetchPolicy: "no-cache",
-  }
-);
+} = await useQuery<CandidatesQuery>(CandidatesDocument, variables, {
+  fetchPolicy: "no-cache",
+});
 
 //================ Functions ================//
 function selectRow(row) {
@@ -157,18 +148,18 @@ function selectRow(row) {
   }
 }
 
-async function deleteCampaigns() {
-  const result = await useMutation(RemoveCampaignDocument, {
-    variables: {
-      removeCampaignId: selectedRows.value.map((el) => el?.id),
-    },
-  }).mutate();
+// async function deleteCampaigns() {
+//   const result = await useMutation(RemoveCampaignDocument, {
+//     variables: {
+//       removeCampaignId: selectedRows.value.map((el) => el?.id),
+//     },
+//   }).mutate();
 
-  if (result?.data?.removeCampaign) {
-    selectedRows.value = [];
-    execute();
-  }
-}
+//   if (result?.data?.removeCampaign) {
+//     selectedRows.value = [];
+//     execute();
+//   }
+// }
 
 //================ WATCHERS ================//
 watch(page, (value) => {
@@ -187,7 +178,7 @@ watch(sort, (value) => {
 
 watch(data, (value) => {
   if (value) {
-    pageTotal.value = value.campaignCount.count;
+    pageTotal.value = value.candidatesCount.count;
   }
 });
 </script>
@@ -285,7 +276,7 @@ watch(data, (value) => {
     <UTable
       v-model="selectedRows"
       v-model:sort="sort"
-      :rows="data?.campaign"
+      :rows="data?.candidates"
       :columns="columnsTable"
       :loading="pending"
       sort-asc-icon="i-heroicons-arrow-up"

@@ -17,6 +17,7 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "@nuxtjs/device",
     "@nuxtjs/apollo",
+    "shadcn-nuxt",
   ],
 
   pages: true,
@@ -31,7 +32,6 @@ export default defineNuxtConfig({
         runOnBuild: true,
         config: {
           overwrite: true,
-          // schema: "http://localhost:3002/graphql",
           schema: process.env.GQL_HOST,
           documents: "./queries/**/*.gql",
 
@@ -50,7 +50,7 @@ export default defineNuxtConfig({
     clients: {
       default: {
         httpEndpoint: process.env.GQL_HOST || "http://localhost:3000/graphql",
-        browserHttpEndpoint: process.env.GQL_HOST,
+        browserHttpEndpoint: process.env.GQL_HOST_BROWSER,
         connectToDevTools: true,
         defaultOptions: {
           query: {
@@ -66,5 +66,10 @@ export default defineNuxtConfig({
 
   ui: {
     icons: ["mage", "bxl"],
+  },
+
+  shadcn: {
+    componentDir: "./components/ui",
+    prefix: "Sha",
   },
 });

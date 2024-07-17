@@ -1,0 +1,76 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Campaign {
+  id: String!
+  name: String!
+  keyword: String!
+  providers: [String!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  status: String!
+  endType: String!
+  endValue: Int
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Count {
+  count: Int!
+}
+
+type Candidate {
+  """Name of candidate"""
+  name: String!
+
+  """Position of candidate"""
+  position: String!
+
+  """Salary expectation of candidate"""
+  salaryExpectation: Int!
+}
+
+type Query {
+  candidates(offset: Int!, limit: Int!): [Candidate!]!
+  candidatesCount: Count!
+  candidate(id: Int!): Candidate!
+  campaign(ListCampaignInput: ListCampaignInput!): [Campaign!]!
+  campaignCount: Count!
+  campaignById(id: String!): Campaign!
+}
+
+input ListCampaignInput {
+  offset: Int!
+  limit: Int!
+  filterKey: String
+  filterValue: String
+  sortKey: String
+  sortValue: String
+}
+
+type Mutation {
+  removeCandidate(id: Int!): Candidate!
+  createCampaign(createCampaignInput: CreateCampaignInput!): Campaign!
+  updateCampaign(id: String!, updateCampaignInput: UpdateCampaignInput!): Campaign!
+  removeCampaign(id: [String!]!): Boolean!
+}
+
+input CreateCampaignInput {
+  name: String!
+  keyword: String!
+  providers: [String!]!
+  endType: String!
+  endValue: Int
+}
+
+input UpdateCampaignInput {
+  name: String
+  keyword: String
+  providers: [String!]
+  endType: String
+  endValue: Int
+}

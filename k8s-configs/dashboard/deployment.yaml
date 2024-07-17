@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashboard
+  template:
+    metadata:
+      labels:
+        app: dashboard
+    spec:
+      containers:
+        - name: dashboard
+          image: dashboard:latest # You'll need to build and push this image
+          ports:
+            - containerPort: 3000
+            - containerPort: 24678
+          env:
+            - name: GQL_HOST
+              value: "http://gateway-microservice:3000/graphql"
