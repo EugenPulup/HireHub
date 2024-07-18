@@ -1,35 +1,25 @@
+# Dashboard Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gateway-microservice
+  name: be-gateway
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: gateway-microservice
+      app: be-gateway
   template:
     metadata:
       labels:
-        app: gateway-microservice
+        app: be-gateway
     spec:
       containers:
-        - name: gateway-microservice
-          image: gateway-microservice:latest # You'll need to build and push this image
+        - name: be-gateway
+          image: eugenepulup228/be-gateway:latest # You'll need to build and push this image
           ports:
             - containerPort: 3000
           env:
-            - name: NODE_ENV
-              valueFrom:
-                configMapKeyRef:
-                  name: app-config
-                  key: NODE_ENV
             - name: RABBITMQ_URI
-              valueFrom:
-                secretKeyRef:
-                  name: rabbitmq-secret
-                  key: uri
+              value: "amqp://rabbitmq:5672"
             - name: DATABASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: url
+              value: "postgresql://googieUser:googiePass@postgres:5432/googieDB?schema=public"

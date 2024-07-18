@@ -1,10 +1,13 @@
+# Dashboard Service
 apiVersion: v1
 kind: Service
 metadata:
-  name: gateway-microservice
+  name: be-gateway
 spec:
   selector:
-    app: gateway-microservice
+    app: be-gateway
+  type: ClusterIP
   ports:
-    - port: 3000
+    - protocol: TCP
+      port: 3000
       targetPort: 3000

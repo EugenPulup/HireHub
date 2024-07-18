@@ -17,6 +17,7 @@ services:
       context: ./apps/dashboard
       dockerfile: dockerfile
       target: dev
+    image: eugenepulup228/dashboard
     container_name: dashboard
     restart: always
     environment:
@@ -37,6 +38,7 @@ services:
       context: ./apps/be-finder
       dockerfile: dockerfile
       target: dev
+    image: eugenepulup228/be-finder
     container_name: be-finder
     restart: unless-stopped
     ports:
@@ -55,6 +57,7 @@ services:
       context: ./apps/be-gateway
       dockerfile: dockerfile
       target: dev
+    image: eugenepulup228/be-gateway
     container_name: be-gateway
     restart: unless-stopped
     volumes:

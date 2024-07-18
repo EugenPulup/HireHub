@@ -5,8 +5,13 @@ metadata:
 spec:
   selector:
     app: rabbitmq
+  type: ClusterIP
   ports:
-    - port: 5672
+    - protocol: TCP
+      port: 5672
       targetPort: 5672
-    - port: 15672
+      name: amqp-port
+    - protocol: TCP
+      port: 15672
       targetPort: 15672
+      name: monitor-port

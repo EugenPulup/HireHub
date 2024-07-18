@@ -29,7 +29,7 @@ export default defineNuxtConfig({
       graphqlLoader(),
       codegen({
         runOnStart: true,
-        runOnBuild: true,
+        runOnBuild: false,
         config: {
           overwrite: true,
           schema: process.env.GQL_HOST,

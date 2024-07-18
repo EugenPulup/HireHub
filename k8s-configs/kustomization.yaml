@@ -1,0 +1,4 @@
+secretGenerator:
+  - name: app-secrets
+    envs:
+      - .env.secret

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-secret
+  labels:
+    app: postgres
+data:
+  POSTGRES_DB: googieDB
+  POSTGRES_USER: googieUser
+  POSTGRES_PASSWORD: googiePass

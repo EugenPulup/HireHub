@@ -12,6 +12,11 @@ const data = [
     predicted: Math.floor(Math.random() * 2000) + 500,
   },
   {
+    name: "Jan 2",
+    total: Math.floor(Math.random() * 2000) + 1000,
+    predicted: Math.floor(Math.random() * 2000) + 500,
+  },
+  {
     name: "Feb",
     total: Math.floor(Math.random() * 2000) + 1000,
     predicted: Math.floor(Math.random() * 2000) + 500,

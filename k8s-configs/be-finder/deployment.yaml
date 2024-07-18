@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: finder-microservice
+  name: be-finder
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: finder-microservice
+      app: be-finder
   template:
     metadata:
       labels:
-        app: finder-microservice
+        app: be-finder
     spec:
       containers:
-        - name: finder-microservice
-          image: finder-microservice:latest # You'll need to build and push this image
+        - name: be-finder
+          image: be-finder:latest # You'll need to build and push this image
           ports:
             - containerPort: 3000
           env:
@@ -24,7 +24,4 @@ spec:
                   name: app-config
                   key: NODE_ENV
             - name: RABBITMQ_URI
-              valueFrom:
-                secretKeyRef:
-                  name: rabbitmq-secret
-                  key: uri
+              value: "amqp://$(RABBITMQ_DEFAULT_USER):$(RABBITMQ_DEFAULT_PASS)@rabbitmq:5672"

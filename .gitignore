@@ -3,3 +3,4 @@ dist
 .dockerignore
 *-lock.yaml
 .env
+.env.secret
