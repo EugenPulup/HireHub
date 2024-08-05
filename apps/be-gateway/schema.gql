@@ -24,6 +24,8 @@ type Count {
 }
 
 type Candidate {
+  id: String!
+
   """Name of candidate"""
   name: String!
 
@@ -32,6 +34,10 @@ type Candidate {
 
   """Salary expectation of candidate"""
   salaryExpectation: Int!
+
+  """Sum of Candidate experience in years"""
+  yearsOfExperience: Int!
+  createdAt: DateTime!
 }
 
 type Query {
@@ -53,7 +59,7 @@ input ListCampaignInput {
 }
 
 type Mutation {
-  removeCandidate(id: Int!): Candidate!
+  removeCandidate(id: [String!]!): Boolean!
   createCampaign(createCampaignInput: CreateCampaignInput!): Campaign!
   updateCampaign(id: String!, updateCampaignInput: UpdateCampaignInput!): Campaign!
   removeCampaign(id: [String!]!): Boolean!

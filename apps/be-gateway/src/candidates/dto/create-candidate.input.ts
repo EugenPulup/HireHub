@@ -65,7 +65,12 @@ export class CreateCandidateInput {
   position: string;
 
   @IsNumber()
-  salaryExpectation: number;
+  @IsOptional()
+  salaryExpectation?: number;
+
+  @IsNumber()
+  @IsOptional()
+  yearsOfExperience?: number;
 
   @IsArray()
   @IsString({ each: true })

@@ -1,15 +1,15 @@
 version: "3.8"
 
 services:
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    ports:
-      - ${RABBITMQ_PORT}:5672
-      - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+  # rabbitmq:
+  #   image: rabbitmq:3-management
+  #   container_name: rabbitmq
+  #   ports:
+  #     - ${RABBITMQ_PORT}:5672
+  #     - "15672:15672"
+  #   environment:
+  #     RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+  #     RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
 
   dashboard:
     env_file: .env
@@ -17,7 +17,7 @@ services:
       context: ./apps/dashboard
       dockerfile: dockerfile
       target: dev
-    image: eugenepulup228/dashboard
+    # image: eugenepulup228/dashboard
     container_name: dashboard
     restart: always
     environment:
@@ -30,7 +30,7 @@ services:
       - ${DASHBOARD_TOOLS_PORT}:24678
     depends_on:
       be-gateway:
-        condition: service_healthy
+        condition: service_started
 
   be-finder:
     env_file: .env
@@ -38,16 +38,20 @@ services:
       context: ./apps/be-finder
       dockerfile: dockerfile
       target: dev
-    image: eugenepulup228/be-finder
+    # image: eugenepulup228/be-finder
     container_name: be-finder
     restart: unless-stopped
     ports:
       - "${FINDER_PORT}:3000"
+    volumes:
+      - ./apps/be-finder:/app
+      - /app/node_modules
     environment:
       NODE_ENV: ${NODE_ENV}
+      KAFKA_URI: kafka:9092
       RABBITMQ_URI: amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:${RABBITMQ_PORT}
     depends_on:
-      - rabbitmq
+      - kafka
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -57,7 +61,7 @@ services:
       context: ./apps/be-gateway
       dockerfile: dockerfile
       target: dev
-    image: eugenepulup228/be-gateway
+    # image: eugenepulup228/be-gateway
     container_name: be-gateway
     restart: unless-stopped
     volumes:
@@ -68,9 +72,10 @@ services:
     environment:
       NODE_ENV: ${NODE_ENV}
       RABBITMQ_URI: amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:${RABBITMQ_PORT}
+      KAFKA_URI: kafka:9092
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgresDB:5432/${POSTGRES_DB}?schema=public
     depends_on:
-      - rabbitmq
+      - kafka
     healthcheck:
       test: curl --fail http://be-gateway:3000
       interval: 5s
@@ -88,7 +93,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      PGDATA: "/var/lib/postgresql/data/pgdata"
+      PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - googieDB-data:/var/lib/postgresql/data
     healthcheck:
@@ -101,28 +106,70 @@ services:
     networks:
       - default
 
-  pgadmin:
-    container_name: pgadmin_container
-    image: dpage/pgadmin4:latest
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-      PGADMIN_CONFIG_SERVER_MODE: "False"
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin
+  redis:
+    container_name: redis
+    image: redis:latest
     ports:
-      - "${PGADMIN_PORT}:80"
-    restart: unless-stopped
+      - ${REDIS_PORT}:6379
+
+  kafka:
+    container_name: kafka
+    image: bitnami/kafka:latest
+    # volumes:
+    #   - /data/kafka-persistence:/bitnami/kafka
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    ports:
+      - 9092:9092
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - dashboard
+      - be-gateway
+      - be-finder
+    # - pgadmin
+    # - prometheus
+    # - grafana
+    # - bull-metrics
 
   analytic-db:
-    container_name: analytic-db
-    image: clickhouse/clickhouse-server:latest
+    image: bitnami/clickhouse:latest
     ports:
+      - 9000:9000
       - 8123:8123
     environment:
-      - CLICKHOUSE_DB=hireHub
-      - CLICKHOUSE_USER=admin
-      - CLICKHOUSE_PASSWORD=admin
+      - ALLOW_EMPTY_PASSWORD=no
+      - CLICKHOUSE_ADMIN_PASSWORD=admin
+      - CLICKHOUSE_ADMIN_USER=admin
+
+  analytic-db-gui:
+    image: ghcr.io/caioricciuti/ch-ui:latest
+    ports:
+      - 5521:5521
+    environment:
+      - VITE_CLICKHOUSE_URL=http://analytic-db:8123
+      - VITE_CLICKHOUSE_PASS=admin
+
+  # analytic-db:
+  #   container_name: analytic-db
+  #   image: clickhouse/clickhouse-server:latest
+  #   ports:
+  #     - 8123:8123
+  #   environment:
+  #     - CLICKHOUSE_DB=hireHub
+  #     - CLICKHOUSE_USER=admin
+  #     - CLICKHOUSE_PASSWORD=admin
 
   # analytic-db-gui:
   #   container_name: analytic-db-gui
@@ -146,11 +193,18 @@ services:
   #   ports:
   #     - ${GRAFANA_PORT}:3000
 
-  redis:
-    container_name: redis
-    image: redis:latest
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
     ports:
-      - ${REDIS_PORT}:6379
+      - "${PGADMIN_PORT}:80"
+    restart: unless-stopped
 
   # bull-metrics:
   #   container_name: bull-metrics
@@ -175,22 +229,6 @@ services:
   #     - ./postgres_exporter.yml:/bin/postgres_exporter.yml
   #   depends_on:
   #     - postgresDB
-
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - dashboard
-      - be-gateway
-      - be-finder
-      - pgadmin
-      # - prometheus
-      # - grafana
-      # - bull-metrics
 
 networks:
   default:

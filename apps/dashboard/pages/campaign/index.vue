@@ -109,7 +109,7 @@ const columnsTable = computed(() =>
 const selectedRows = ref<Campaign[]>([]);
 
 const search = ref("");
-const selectedStatus = ref([]);
+const selectedStatus = ref<typeof statuses>([]);
 const resetFilters = () => {
   search.value = "";
   selectedStatus.value = [];
@@ -149,7 +149,7 @@ const {
 );
 
 //================ Functions ================//
-function selectRow(row) {
+function selectRow(row: Campaign) {
   const index = selectedRows.value.findIndex((item) => item.id === row.id);
   if (index === -1) {
     selectedRows.value.push(row);
@@ -185,7 +185,7 @@ watch(page, (value) => {
 
 watch(selectedStatus, () => {
   variables.filterKey = "status";
-  variables.filterValue = selectedStatus.value[0]?.key;
+  variables.filterValue = selectedStatus.value[0].key;
 });
 
 watch(sort, (value) => {

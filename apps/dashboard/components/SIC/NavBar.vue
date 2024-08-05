@@ -1,9 +1,24 @@
 <script setup>
 const { isMobileOrTablet } = useDevice();
 const links = [
-  { name: "Dashboard", path: "/", icon: "i-mage-dashboard-bar" },
-  { name: "Campaign", path: "/campaign", icon: "i-mage-megaphone-a" },
-  { name: "Candidates", path: "/candidates", icon: "i-mage-users" },
+  {
+    label: "Dashboard",
+    name: "index",
+    path: "/",
+    icon: "i-mage-dashboard-bar",
+  },
+  {
+    label: "Campaigns",
+    name: "campaign",
+    path: "/campaign",
+    icon: "i-mage-megaphone-a",
+  },
+  {
+    label: "Candidates",
+    name: "candidates",
+    path: "/candidates",
+    icon: "i-mage-users",
+  },
 ];
 </script>
 
@@ -24,7 +39,7 @@ const links = [
 
       <div
         v-for="link in links"
-        :key="link.name"
+        :key="link.label"
         class="px-2 flex flex-col justify-center align-middle items-center"
       >
         <NuxtLink :to="link.path" class="w-full">
@@ -33,6 +48,9 @@ const links = [
             color="primary"
             size="xl"
             class="text-black dark:text-white"
+            :class="{
+              'bg-primary/10': $route.name === link.name,
+            }"
             :icon="link.icon"
             variant="ghost"
             :square="true"
@@ -43,8 +61,11 @@ const links = [
             size="xl"
             class="w-full text-black dark:text-white"
             :icon="link.icon"
+            :class="{
+              'bg-primary/10': $route.name === link.name,
+            }"
             variant="ghost"
-            >{{ link.name }}</UButton
+            >{{ link.label }}</UButton
           >
         </NuxtLink>
       </div>

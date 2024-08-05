@@ -1,39 +1,41 @@
 import { Parser } from './parser.interface';
 import { z } from 'zod';
-import { zodToJsonSchema } from 'zod-to-json-schema';
-import { OllamaFunctions } from '@langchain/community/experimental/chat_models/ollama_functions';
-import { JsonOutputFunctionsParser } from '@langchain/core/output_parsers/openai_functions';
-import { PromptTemplate } from '@langchain/core/prompts';
+import { ChatPromptTemplate } from '@langchain/core/prompts';
+import { ChatAnthropic } from '@langchain/anthropic';
 import { Logger } from '@nestjs/common';
 
-const logger = new Logger('Scrapper');
+type model = 'claude-3-haiku-20240307';
 
-type model = 'llama3' | 'mistrallite' | 'mistral' | 'gemma2' | 'nexusraven';
-
-class OllamaParser implements Parser {
+class AnthropicParser implements Parser {
   public model: model;
   private LLM: any;
   private schema: Zod.Schema;
   private logger: Logger;
-  private systemPrompt: PromptTemplate;
+  private systemPrompt: ChatPromptTemplate;
 
-  constructor(model: model) {
-    this.logger = new Logger('OllamaParser');
+  constructor(model: model = 'claude-3-haiku-20240307') {
+    this.logger = new Logger('AnthropicParser');
 
     this.schema = z.object({
       name: z.string().describe('The name of a person'),
-      age: z.number().describe("The person's age"),
+      age: z.number().describe("The person's age").nullish(),
       typeOfWork: z
         .string()
         .describe(
           "The person's type of work. (office, remote, part-time, etc.)",
-        ),
+        )
+        .nullish(),
       position: z.string().describe("The person's position"),
       salaryExpectation: z
         .number()
-        .describe("The person's salary expectations"),
+        .describe("The person's salary expectations")
+        .nullish(),
       skills: z.array(z.string()).describe("The person's skills"),
-      location: z.string().describe("The person's location"),
+      yearsOfExperience: z
+        .number()
+        .nullish()
+        .describe('The person summary years of work experience'),
+      location: z.string().describe("The person's location").nullish(),
       education: z
         .array(
           z.object({
@@ -47,7 +49,8 @@ class OllamaParser implements Parser {
             endDate: z.string().describe("The person's end date of education"),
           }),
         )
-        .describe("The person's education"),
+        .describe("The person's education")
+        .nullish(),
       experience: z
         .array(
           z.object({
@@ -65,49 +68,44 @@ class OllamaParser implements Parser {
               .describe("The person's description of experience"),
           }),
         )
-        .describe("The person's experience"),
-      languages: z.array(z.string()).describe("The person's languages"),
+        .describe("The person's experience")
+        .nullish(),
+      languages: z
+        .array(z.string())
+        .describe("The person's languages")
+        .nullish(),
     });
 
-    this.LLM = new OllamaFunctions({
-      baseUrl: 'http://host.docker.internal:11434',
+    this.LLM = new ChatAnthropic({
       model,
-      temperature: 0.1,
-    }).bind({
-      functions: [
-        {
-          name: 'information_extraction',
-          description: 'Extract candidate data from resume text',
-          parameters: {
-            type: 'object',
-            properties: zodToJsonSchema(this.schema),
-          },
-        },
-      ],
-      function_call: {
-        name: 'information_extraction',
-      },
+      temperature: 0,
     });
 
-    this.systemPrompt = PromptTemplate.fromTemplate(` 
-      Extract candidate data from a given resume text based on a predefined schema. If the model is unable to determine a value for a specific field, return 'null' for that field.
-      
-      Resume text: {input}`);
+    this.systemPrompt = ChatPromptTemplate.fromMessages([
+      [
+        'system',
+        `You are an expert extraction algorithm.
+        Only extract relevant information from the text.
+        If you do not know the value of an attribute asked to extract, if scheme field type is number use "0" as default, if string then "null". Dont use next symbols <,/|: .`,
+      ],
+
+      ['human', '{text}'],
+    ]);
   }
 
   async parse(text: string): Promise<object> {
-    const chain = await this.systemPrompt
-      .pipe(this.LLM)
-      .pipe(new JsonOutputFunctionsParser());
+    const chain = this.systemPrompt.pipe(
+      this.LLM.withStructuredOutput(this.schema, { name: 'candidate' }),
+    );
 
-    const response = await chain.invoke({
-      input: text,
-    });
+    const response = (await chain.invoke({
+      text,
+    })) as object;
 
-    logger.log(response);
+    this.logger.log(response);
 
     return response;
   }
 }
 
-export { OllamaParser };
+export { AnthropicParser };

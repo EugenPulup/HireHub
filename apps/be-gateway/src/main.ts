@@ -7,7 +7,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: ['http://localhost:3000', 'hirehub.loc', 'dashboard.hirehub.loc'],
+    origin: [
+      'http://localhost:3000',
+      'hirehub.loc',
+      'http://dashboard.hirehub.loc',
+      'dashboard.hirehub.loc',
+    ],
     optionsSuccessStatus: 200,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
@@ -15,13 +20,15 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   app.connectMicroservice({
-    transport: Transport.RMQ,
+    transport: Transport.KAFKA,
     options: {
-      urls: [configService.get('RABBITMQ_URI')],
-      queue: 'candidate:save',
-      prefetchCount: 1,
-      queueOptions: {
-        durable: false,
+      client: {
+        clientId: 'be-gateway',
+        brokers: [configService.get('KAFKA_URI')],
+      },
+      consumer: {
+        groupId: 'be-finder',
+        allowAutoTopicCreation: true,
       },
     },
   });

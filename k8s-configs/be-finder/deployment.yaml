@@ -14,14 +14,9 @@ spec:
     spec:
       containers:
         - name: be-finder
-          image: be-finder:latest # You'll need to build and push this image
+          image: eugenepulup228/be-finder:latest # You'll need to build and push this image
           ports:
             - containerPort: 3000
           env:
-            - name: NODE_ENV
-              valueFrom:
-                configMapKeyRef:
-                  name: app-config
-                  key: NODE_ENV
             - name: RABBITMQ_URI
-              value: "amqp://$(RABBITMQ_DEFAULT_USER):$(RABBITMQ_DEFAULT_PASS)@rabbitmq:5672"
+              value: "amqp://rabbitmq:5672"

@@ -11,15 +11,14 @@ export class CandidatesService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createCandidateInput: CreateCandidateInput) {
-    logger.log('createCandidateInput ' + JSON.stringify(createCandidateInput));
-
     const candidate = await this.prisma.candidate.create({
       data: {
         name: createCandidateInput.name,
-        age: createCandidateInput.age,
+        age: createCandidateInput.age || 0,
         typeOfWork: createCandidateInput.typeOfWork,
         position: createCandidateInput.position,
-        salaryExpectation: createCandidateInput.salaryExpectation,
+        salaryExpectation: createCandidateInput.salaryExpectation || 0,
+        yearsOfExperience: createCandidateInput.yearsOfExperience || 0,
         skills: createCandidateInput.skills,
         location: createCandidateInput.location,
         languages: createCandidateInput.languages,
@@ -69,6 +68,9 @@ export class CandidatesService {
     return this.prisma.candidate.findMany({
       skip: offset,
       take: limit,
+      orderBy: {
+        createdAt: 'asc',
+      },
     });
   }
 
@@ -82,7 +84,13 @@ export class CandidatesService {
 
   update(id: number, updateCandidateInput: UpdateCandidateInput) {}
 
-  remove(id: number) {
-    return `This action removes a #${id} candidate`;
+  remove(ids: string[]) {
+    return this.prisma.campaign.deleteMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    });
   }
 }

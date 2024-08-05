@@ -1,11 +1,18 @@
 query Candidates($offset: Int!, $limit: Int!) {
   candidates(offset: $offset, limit: $limit) {
+    id
     name
     position
     salaryExpectation
+    yearsOfExperience
+    createdAt
   }
 
   candidatesCount {
     count
   }
+}
+
+mutation RemoveCandidate($removeCandidate: [String!]!) {
+  removeCandidate(id: $removeCandidate)
 }

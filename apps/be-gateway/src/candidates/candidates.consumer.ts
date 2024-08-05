@@ -1,28 +1,31 @@
-import { Controller, Get, Post, Inject, Body } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { CandidatesService } from './candidates.service';
 import { CreateCandidateInput } from './dto/create-candidate.input';
 import {
-  RmqRecordBuilder,
-  ClientProxy,
   Transport,
-  MessagePattern,
+  EventPattern,
+  KafkaContext,
   Payload,
   Ctx,
-  RmqContext,
 } from '@nestjs/microservices';
+import { Logger } from '@nestjs/common';
+
+const logger = new Logger('Consumer');
 
 @Controller()
 export class CandidatesConsumer {
   constructor(private readonly candidatesService: CandidatesService) {}
 
-  @MessagePattern('candidate:save', Transport.RMQ)
+  @EventPattern('candidate_action_save', Transport.KAFKA)
   async createCandidate(
     @Payload() data: CreateCandidateInput,
-    @Ctx() context: RmqContext,
+    @Ctx() context: KafkaContext,
   ) {
     try {
+      logger.log(`Input Data: ${JSON.stringify(data)}`);
       await this.candidatesService.create(data);
     } catch (error) {
+      logger.error(error);
     } finally {
       return true;
     }

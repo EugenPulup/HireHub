@@ -1,17 +1,17 @@
 import { WorkuaScrapper } from './scrapper/workua.scrapper';
-import { OllamaParser } from './parser/ollama.parser';
+import { AnthropicParser } from './parser/anthropic.parser';
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { Logger } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
-import { ClientProxy, RmqRecordBuilder } from '@nestjs/microservices';
+import { ClientKafka } from '@nestjs/microservices';
 import puppeteer from 'puppeteer';
 
 const logger = new Logger('FinderService');
 
 @Processor('campaign:search', { concurrency: 5 })
 export class FinderConsumer extends WorkerHost {
-  constructor(@Inject('CANDIDATE_QUEUE') private rabbit_client: ClientProxy) {
+  constructor(@Inject('CANDIDATE_QUEUE') private kafka_client: ClientKafka) {
     super();
   }
 
@@ -23,29 +23,23 @@ export class FinderConsumer extends WorkerHost {
 
       const scrapper = new WorkuaScrapper(browser);
 
-      const parser = new OllamaParser('nexusraven');
+      // const parser = new OllamaParser('mistral');
+      const parser = new AnthropicParser();
 
       for await (const result of scrapper.scrapByKeyword(job.data.keyword)) {
         try {
           const candidate = await parser.parse(result);
 
-          const record = new RmqRecordBuilder({
-            ...candidate,
-            campaignId: job.data.id,
-          })
-            .setOptions({
-              headers: {
-                ['x-version']: '1.0.0',
-              },
-              priority: 1,
+          this.kafka_client
+            .emit('candidate_action_save', {
+              ...candidate,
+              campaignId: job.data.id,
             })
-            .build();
-
-          this.rabbit_client.send('candidate:save', record).subscribe();
+            .subscribe(logger.log);
 
           logger.log('Send to Queue');
         } catch (error) {
-          logger.log('Sending to Queue Failed');
+          logger.log(`ERROR: ${error}`);
         } finally {
           continue;
         }

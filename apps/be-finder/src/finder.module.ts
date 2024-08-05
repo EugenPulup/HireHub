@@ -13,12 +13,14 @@ import { Transport, ClientsModule } from '@nestjs/microservices';
     ClientsModule.register([
       {
         name: 'CANDIDATE_QUEUE',
-        transport: Transport.RMQ,
+        transport: Transport.KAFKA,
         options: {
-          urls: [process.env.RABBITMQ_URI],
-          queue: 'candidate:save',
-          queueOptions: {
-            durable: false,
+          client: {
+            clientId: 'be-finder',
+            brokers: [process.env.KAFKA_URI],
+          },
+          consumer: {
+            groupId: 'be-gateway',
           },
         },
       },

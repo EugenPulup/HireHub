@@ -33,12 +33,16 @@ export type Campaign = {
 
 export type Candidate = {
   __typename?: 'Candidate';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
   /** Name of candidate */
   name: Scalars['String']['output'];
   /** Position of candidate */
   position: Scalars['String']['output'];
   /** Salary expectation of candidate */
   salaryExpectation: Scalars['Int']['output'];
+  /** Sum of Candidate experience in years */
+  yearsOfExperience: Scalars['Int']['output'];
 };
 
 export type Count = {
@@ -67,7 +71,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createCampaign: Campaign;
   removeCampaign: Scalars['Boolean']['output'];
-  removeCandidate: Candidate;
+  removeCandidate: Scalars['Boolean']['output'];
   updateCampaign: Campaign;
 };
 
@@ -83,7 +87,7 @@ export type MutationRemoveCampaignArgs = {
 
 
 export type MutationRemoveCandidateArgs = {
-  id: Scalars['Int']['input'];
+  id: Array<Scalars['String']['input']>;
 };
 
 
@@ -173,7 +177,14 @@ export type CandidatesQueryVariables = Exact<{
 }>;
 
 
-export type CandidatesQuery = { __typename?: 'Query', candidates: Array<{ __typename?: 'Candidate', name: string, position: string, salaryExpectation: number }>, candidatesCount: { __typename?: 'Count', count: number } };
+export type CandidatesQuery = { __typename?: 'Query', candidates: Array<{ __typename?: 'Candidate', id: string, name: string, position: string, salaryExpectation: number, yearsOfExperience: number, createdAt: any }>, candidatesCount: { __typename?: 'Count', count: number } };
+
+export type RemoveCandidateMutationVariables = Exact<{
+  removeCandidate: Array<Scalars['String']['input']> | Scalars['String']['input'];
+}>;
+
+
+export type RemoveCandidateMutation = { __typename?: 'Mutation', removeCandidate: boolean };
 
 
 export const CreateCampaignDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateCampaign"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"createCampaignInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateCampaignInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createCampaign"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"createCampaignInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"createCampaignInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"endType"}},{"kind":"Field","name":{"kind":"Name","value":"keyword"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"providers"}}]}}]}}]} as unknown as DocumentNode<CreateCampaignMutation, CreateCampaignMutationVariables>;
@@ -181,7 +192,8 @@ export const UpdateCampaignDocument = {"kind":"Document","definitions":[{"kind":
 export const RemoveCampaignDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RemoveCampaign"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"removeCampaignId"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeCampaign"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"removeCampaignId"}}}]}]}}]} as unknown as DocumentNode<RemoveCampaignMutation, RemoveCampaignMutationVariables>;
 export const CampaignDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Campaign"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"listCampaignInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ListCampaignInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"campaign"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"ListCampaignInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"listCampaignInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"keyword"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"providers"}},{"kind":"Field","name":{"kind":"Name","value":"endType"}},{"kind":"Field","name":{"kind":"Name","value":"endValue"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"campaignCount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]} as unknown as DocumentNode<CampaignQuery, CampaignQueryVariables>;
 export const CampaignByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CampaignById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"campaignById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"keyword"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"providers"}},{"kind":"Field","name":{"kind":"Name","value":"endType"}},{"kind":"Field","name":{"kind":"Name","value":"endValue"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<CampaignByIdQuery, CampaignByIdQueryVariables>;
-export const CandidatesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Candidates"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"candidates"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"position"}},{"kind":"Field","name":{"kind":"Name","value":"salaryExpectation"}}]}},{"kind":"Field","name":{"kind":"Name","value":"candidatesCount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]} as unknown as DocumentNode<CandidatesQuery, CandidatesQueryVariables>;
+export const CandidatesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Candidates"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"candidates"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"position"}},{"kind":"Field","name":{"kind":"Name","value":"salaryExpectation"}},{"kind":"Field","name":{"kind":"Name","value":"yearsOfExperience"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"candidatesCount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]} as unknown as DocumentNode<CandidatesQuery, CandidatesQueryVariables>;
+export const RemoveCandidateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RemoveCandidate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"removeCandidate"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeCandidate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"removeCandidate"}}}]}]}}]} as unknown as DocumentNode<RemoveCandidateMutation, RemoveCandidateMutationVariables>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -208,12 +220,16 @@ export type Campaign = {
 
 export type Candidate = {
   __typename?: 'Candidate';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
   /** Name of candidate */
   name: Scalars['String']['output'];
   /** Position of candidate */
   position: Scalars['String']['output'];
   /** Salary expectation of candidate */
   salaryExpectation: Scalars['Int']['output'];
+  /** Sum of Candidate experience in years */
+  yearsOfExperience: Scalars['Int']['output'];
 };
 
 export type Count = {
@@ -242,7 +258,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createCampaign: Campaign;
   removeCampaign: Scalars['Boolean']['output'];
-  removeCandidate: Candidate;
+  removeCandidate: Scalars['Boolean']['output'];
   updateCampaign: Campaign;
 };
 
@@ -258,7 +274,7 @@ export type MutationRemoveCampaignArgs = {
 
 
 export type MutationRemoveCandidateArgs = {
-  id: Scalars['Int']['input'];
+  id: Array<Scalars['String']['input']>;
 };
 
 
@@ -348,4 +364,11 @@ export type CandidatesQueryVariables = Exact<{
 }>;
 
 
-export type CandidatesQuery = { __typename?: 'Query', candidates: Array<{ __typename?: 'Candidate', name: string, position: string, salaryExpectation: number }>, candidatesCount: { __typename?: 'Count', count: number } };
+export type CandidatesQuery = { __typename?: 'Query', candidates: Array<{ __typename?: 'Candidate', id: string, name: string, position: string, salaryExpectation: number, yearsOfExperience: number, createdAt: any }>, candidatesCount: { __typename?: 'Count', count: number } };
+
+export type RemoveCandidateMutationVariables = Exact<{
+  removeCandidate: Array<Scalars['String']['input']> | Scalars['String']['input'];
+}>;
+
+
+export type RemoveCandidateMutation = { __typename?: 'Mutation', removeCandidate: boolean };

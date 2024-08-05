@@ -3,8 +3,10 @@ import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import {
   MessagePattern,
   Payload,
+  EventPattern,
   Ctx,
   RmqContext,
+  KafkaContext,
 } from '@nestjs/microservices';
 import { FinderService } from './finder.service';
 import { Logger } from '@nestjs/common';
@@ -25,18 +27,18 @@ export class FinderController {
     return this.finderService.getMetrics();
   }
 
-  @MessagePattern('campaign:search', Transport.RMQ)
+  @EventPattern('campaign_search', Transport.KAFKA)
   async job(
     @Payload() data: number[],
-    @Ctx() context: RmqContext,
+    @Ctx() context: KafkaContext,
   ): Promise<boolean> {
     logger.log('Received Job!');
-    const channel = context.getChannelRef();
-    const originalMsg = context.getMessage();
+    // const channel = context.getChannelRef();
+    // const originalMsg = context.getMessage();
 
     this.finderService.processJob(data);
 
-    channel.ack(originalMsg);
+    // channel.ack(originalMsg);
 
     return true;
   }

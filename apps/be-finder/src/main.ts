@@ -12,14 +12,15 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   app.connectMicroservice({
-    transport: Transport.RMQ,
+    transport: Transport.KAFKA,
     options: {
-      urls: [configService.get('RABBITMQ_URI')],
-      queue: 'campaign:search',
-      noAck: false,
-      prefetchCount: 1,
-      queueOptions: {
-        durable: false,
+      client: {
+        clientId: 'be-finder',
+        brokers: [process.env.KAFKA_URI],
+      },
+      consumer: {
+        groupId: 'be-gateway',
+        allowAutoTopicCreation: true,
       },
     },
   });

@@ -25,3 +25,4 @@ logs
 .dockerignore
 
 pnpm-lock.yaml
+.pnpm*

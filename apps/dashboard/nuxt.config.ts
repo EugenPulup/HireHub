@@ -18,10 +18,10 @@ export default defineNuxtConfig({
     "@nuxtjs/device",
     "@nuxtjs/apollo",
     "shadcn-nuxt",
+    "dayjs-nuxt",
   ],
 
   pages: true,
-
   components: true,
 
   vite: {
@@ -72,4 +72,6 @@ export default defineNuxtConfig({
     componentDir: "./components/ui",
     prefix: "Sha",
   },
+
+  compatibilityDate: "2024-07-29",
 });

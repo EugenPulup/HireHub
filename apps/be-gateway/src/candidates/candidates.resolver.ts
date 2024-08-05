@@ -36,8 +36,10 @@ export class CandidatesResolver {
   //   );
   // }
 
-  @Mutation(() => Candidate)
-  removeCandidate(@Args('id', { type: () => Int }) id: number) {
-    return this.candidatesService.remove(id);
+  @Mutation(() => Boolean)
+  async removeCandidate(@Args('id', { type: () => [String] }) id: string[]) {
+    const removedEntity = await this.candidatesService.remove(id);
+
+    return !!removedEntity.count;
   }
 }

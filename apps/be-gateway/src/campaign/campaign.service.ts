@@ -4,7 +4,7 @@ import { UpdateCampaignInput } from './dto/update-campaign.input';
 import { ListCampaignInput } from './dto/list-campaign.input';
 import { PrismaService } from '../prisma/prisma.service';
 import { Controller, Get, Post, Inject, Body } from '@nestjs/common';
-import { ClientProxy, RmqRecordBuilder } from '@nestjs/microservices';
+import { ClientKafka } from '@nestjs/microservices';
 
 import { Logger } from '@nestjs/common';
 
@@ -12,7 +12,7 @@ const logger = new Logger('Finder');
 @Injectable()
 export class CampaignService {
   constructor(
-    @Inject('FINDER_SERVICE') private rabbit_client: ClientProxy,
+    @Inject('FINDER_SERVICE') private messageBroker: ClientKafka,
     private readonly prisma: PrismaService,
   ) {}
 
@@ -21,16 +21,7 @@ export class CampaignService {
       data: createCampaignInput,
     });
 
-    const record = new RmqRecordBuilder(campaign)
-      .setOptions({
-        headers: {
-          ['x-version']: '1.0.0',
-        },
-        priority: 3,
-      })
-      .build();
-
-    this.rabbit_client.send('campaign:search', record).subscribe(logger.log);
+    this.messageBroker.emit('campaign_search', campaign).subscribe(logger.log);
 
     return campaign;
   }

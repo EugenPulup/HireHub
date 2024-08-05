@@ -14,20 +14,35 @@ import { CandidatesModule } from './candidates/candidates.module';
     ConfigModule.forRoot({ isGlobal: true }),
     CampaignModule,
     CandidatesModule,
+    // ClientsModule.register([
+    //   {
+    //     name: 'FINDER_SERVICE',
+    //     transport: Transport.RMQ,
+    //     options: {
+    //       urls: [process.env.RABBITMQ_URI],
+    //       queue: 'campaign:search',
+    //       queueOptions: {
+    //         durable: false,
+    //       },
+    //     },
+    //   },
+    // ]),
     ClientsModule.register([
       {
         name: 'FINDER_SERVICE',
-        transport: Transport.RMQ,
+        transport: Transport.KAFKA,
         options: {
-          urls: [process.env.RABBITMQ_URI],
-          queue: 'campaign:search',
-          queueOptions: {
-            durable: false,
+          client: {
+            clientId: 'be-gateway',
+            brokers: [process.env.KAFKA_URI],
+          },
+          consumer: {
+            groupId: 'be-finder',
+            allowAutoTopicCreation: true,
           },
         },
       },
     ]),
-
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       playground: true,

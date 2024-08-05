@@ -19,13 +19,16 @@ class WorkuaScrapper implements Scrapper {
 
     for (const targetUrl of listOfTargets) {
       try {
-        const LLMFriendlyText = await (
+        const ReaderResponse = await (
           await fetch(`https://r.jina.ai/${targetUrl}`, {
             method: 'POST',
+            headers: {
+              Accept: 'application/json',
+            },
           })
-        ).text();
+        ).json();
 
-        yield LLMFriendlyText;
+        yield ReaderResponse?.content || ReaderResponse.data.content;
       } catch (error) {
         logger.log('Status: ERROR ');
         continue;

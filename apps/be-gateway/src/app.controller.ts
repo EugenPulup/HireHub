@@ -1,5 +1,9 @@
 import { Controller, Get, Post, Inject, Body } from '@nestjs/common';
-import { RmqRecordBuilder, ClientProxy } from '@nestjs/microservices';
+import {
+  RmqRecordBuilder,
+  ClientProxy,
+  ClientKafka,
+} from '@nestjs/microservices';
 import { AppService } from './app.service';
 import { Logger } from '@nestjs/common';
 
@@ -8,7 +12,7 @@ const logger = new Logger('Finder');
 @Controller()
 export class AppController {
   constructor(
-    @Inject('FINDER_SERVICE') private rabbit_client: ClientProxy,
+    @Inject('FINDER_SERVICE') private kafka_client: ClientKafka,
     private readonly appService: AppService,
   ) {}
 
@@ -26,16 +30,18 @@ export class AppController {
   async job(
     @Body() job: { name: string; providers: [string] },
   ): Promise<boolean> {
-    const record = new RmqRecordBuilder(job)
-      .setOptions({
-        headers: {
-          ['x-version']: '1.0.0',
-        },
-        priority: 3,
-      })
-      .build();
+    // const record = new RmqRecordBuilder(job)
+    //   .setOptions({
+    //     headers: {
+    //       ['x-version']: '1.0.0',
+    //     },
+    //     priority: 3,
+    //   })
+    //   .build();
 
-    this.rabbit_client.send('campaign:search', record).subscribe(logger.log);
+    // this.kafka_client.send('campaign:search', record).subscribe(logger.log);
+
+    this.kafka_client.emit('campaign:search', job);
 
     console.log(job.name + ' job sent');
 
@@ -54,7 +60,7 @@ export class AppController {
       .build();
 
     for (let i = 0; i < job.count; i++) {
-      this.rabbit_client
+      this.kafka_client
         .send('campaign:search', {
           name: 'job' + i,
         })

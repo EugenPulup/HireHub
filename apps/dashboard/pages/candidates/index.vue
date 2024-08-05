@@ -1,5 +1,8 @@
 <script lang="ts" setup>
-import { CandidatesDocument } from "@/generated/graphql/graphql.js";
+import {
+  CandidatesDocument,
+  RemoveCandidateDocument,
+} from "@/generated/graphql/graphql.js";
 
 import type {
   CandidatesQuery,
@@ -14,6 +17,8 @@ definePageMeta({
 });
 
 //================ CONST DATA ================//
+const toast = useToast();
+
 // Columns
 const columns = [
   // {
@@ -34,6 +39,16 @@ const columns = [
   {
     key: "salaryExpectation",
     label: "Salary",
+    sortable: true,
+  },
+  {
+    key: "yearsOfExperience",
+    label: "Experience",
+    sortable: true,
+  },
+  {
+    key: "createdAt",
+    label: "Created Date",
     sortable: true,
   },
   // {
@@ -148,18 +163,32 @@ function selectRow(row) {
   }
 }
 
-// async function deleteCampaigns() {
-//   const result = await useMutation(RemoveCampaignDocument, {
-//     variables: {
-//       removeCampaignId: selectedRows.value.map((el) => el?.id),
-//     },
-//   }).mutate();
+async function deleteCandidates() {
+  const result = await useMutation(RemoveCandidateDocument, {
+    variables: {
+      removeCandidate: selectedRows.value.map((el) => el?.id),
+    },
+  }).mutate();
 
-//   if (result?.data?.removeCampaign) {
-//     selectedRows.value = [];
-//     execute();
-//   }
-// }
+  if (!result?.data?.removeCandidate) {
+    toast.add({
+      title: "Error",
+      description: `Unsuccessful deleting candidate...`,
+      color: "red",
+    });
+
+    return;
+  }
+
+  toast.add({
+    title: "Success",
+    description: `Deleted ${selectedRows.value.length} candidates`,
+    color: "primary",
+  });
+
+  selectedRows.value = [];
+  execute();
+}
 
 //================ WATCHERS ================//
 watch(page, (value) => {
@@ -235,7 +264,7 @@ watch(data, (value) => {
           size="xs"
           variant="outline"
           color="red"
-          @click="deleteCampaigns"
+          @click="deleteCandidates"
           >{{ selectedRows.length > 1 ? "Delete All" : "Delete" }}</UButton
         >
 
@@ -334,6 +363,10 @@ watch(data, (value) => {
             >
           </NuxtLink>
         </div>
+      </template>
+
+      <template #createdAt-data="{ row }">
+        {{ useRelativeTime(row.createdAt) }}
       </template>
     </UTable>
 

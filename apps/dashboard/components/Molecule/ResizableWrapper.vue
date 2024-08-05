@@ -6,20 +6,18 @@ const {
   maxWidth = 300,
   collapsedWidth = null,
   centerCollapsed = false,
-  freezeCollapsed = false,
 } = defineProps<{
   minWidth: number | 200;
   maxWidth: number | 300;
   collapsedWidth: number | null;
   centerCollapsed: boolean | false;
-  freezeCollapsed: boolean | false;
 }>();
 
 const id = useId();
 
 const resizableEl = ref<HTMLElement | null>(null);
 const dragger = ref(null);
-const isCollapsed = ref(freezeCollapsed);
+const isCollapsed = useState("isCollapsed", () => true);
 
 const { elementX, elementWidth } = useMouseInElement(resizableEl);
 
@@ -33,7 +31,7 @@ const { isDragging } = useDraggable(dragger, {
       isCollapsed.value = false;
     }
 
-    if (resizableEl?.value && !freezeCollapsed) {
+    if (resizableEl?.value) {
       const width = x;
 
       const Max_Width = isCollapsed.value
