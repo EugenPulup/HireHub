@@ -17,11 +17,12 @@ services:
       context: ./apps/dashboard
       dockerfile: dockerfile
       target: dev
-    # image: eugenepulup228/dashboard
+    image: eugenepulup228/dashboard
     container_name: dashboard
     restart: always
     environment:
       - GQL_HOST=http://be-gateway:3000/graphql
+      - GQL_ANALYTIC_HOST=http://be-analytic:3000/graphql
     volumes:
       - ./apps/dashboard:/app
       - /app/node_modules
@@ -38,7 +39,7 @@ services:
       context: ./apps/be-finder
       dockerfile: dockerfile
       target: dev
-    # image: eugenepulup228/be-finder
+    image: eugenepulup228/be-finder
     container_name: be-finder
     restart: unless-stopped
     ports:
@@ -61,7 +62,7 @@ services:
       context: ./apps/be-gateway
       dockerfile: dockerfile
       target: dev
-    # image: eugenepulup228/be-gateway
+    image: eugenepulup228/be-gateway
     container_name: be-gateway
     restart: unless-stopped
     volumes:
@@ -82,6 +83,30 @@ services:
       timeout: 10s
       retries: 3
       start_period: 5s
+
+  be-analytic:
+    env_file: .env
+    build:
+      context: ./apps/be-analytic
+      dockerfile: dockerfile
+      target: dev
+    image: eugenepulup228/be-analytic
+    container_name: be-analytic
+    restart: unless-stopped
+    volumes:
+      - ./apps/be-analytic:/app
+      - /app/node_modules
+    ports:
+      - "${ANALITYC_PORT}:3000"
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      KAFKA_URI: kafka:9092
+      CLICKHOUSE_HOST: analytic-db
+      CLICKHOUSE_PASSWORD: admin
+      CLICKHOUSE_USER: admin
+      CLICKHOUSE_DB: hireHubTest
+    depends_on:
+      - kafka
 
   postgresDB:
     image: postgres:latest
@@ -160,24 +185,6 @@ services:
     environment:
       - VITE_CLICKHOUSE_URL=http://analytic-db:8123
       - VITE_CLICKHOUSE_PASS=admin
-
-  # analytic-db:
-  #   container_name: analytic-db
-  #   image: clickhouse/clickhouse-server:latest
-  #   ports:
-  #     - 8123:8123
-  #   environment:
-  #     - CLICKHOUSE_DB=hireHub
-  #     - CLICKHOUSE_USER=admin
-  #     - CLICKHOUSE_PASSWORD=admin
-
-  # analytic-db-gui:
-  #   container_name: analytic-db-gui
-  #   image: ghcr.io/caioricciuti/ch-ui:latest
-  #   environment:
-  #     - VITE_CLICKHOUSE_URL=analytic-db:8123
-  #   ports:
-  #     - 5521:5521
 
   # prometheus:
   #   container_name: prometheus

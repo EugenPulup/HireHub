@@ -19,7 +19,7 @@ async function bootstrap() {
         brokers: [process.env.KAFKA_URI],
       },
       consumer: {
-        groupId: 'be-gateway',
+        groupId: 'finder-group',
         allowAutoTopicCreation: true,
       },
     },

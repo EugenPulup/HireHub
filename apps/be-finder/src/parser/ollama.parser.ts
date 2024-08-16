@@ -24,9 +24,9 @@ class OllamaParser implements Parser {
       name: z.string().describe('The name of a person'),
       age: z.number().describe("The person's age"),
       typeOfWork: z
-        .string()
+        .enum(['Remote', 'Office', 'Hybrid'])
         .describe(
-          "The person's type of work. (office, remote, part-time, etc.)",
+          "The person's type of work, which can be one of 'Remote', 'Office', or 'Hybrid'",
         ),
       position: z.string().describe("The person's position"),
       salaryExpectation: z

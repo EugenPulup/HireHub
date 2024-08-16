@@ -1,0 +1,36 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type RangeAnalytic {
+  """count of candidates"""
+  count: Int!
+
+  """count of candidates"""
+  date: String!
+}
+
+type GroupByField {
+  """count of candidates"""
+  metric: Int!
+
+  """count of candidates"""
+  count: Int!
+}
+
+type Query {
+  candidateRangeAnalytic(range: Int!): [RangeAnalytic!]!
+  GroupByField(GroupAnalyticInput: GroupAnalyticInput!): [GroupByField!]!
+}
+
+input GroupAnalyticInput {
+  field: Fields!
+}
+
+enum Fields {
+  yearsOfExperience
+  salaryExpectation
+  age
+  typeOfWork
+  position
+}

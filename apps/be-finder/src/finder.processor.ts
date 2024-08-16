@@ -6,6 +6,7 @@ import { Logger } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import puppeteer from 'puppeteer';
+import { schema } from './schemas/candidate.schema';
 
 const logger = new Logger('FinderService');
 
@@ -23,8 +24,7 @@ export class FinderConsumer extends WorkerHost {
 
       const scrapper = new WorkuaScrapper(browser);
 
-      // const parser = new OllamaParser('mistral');
-      const parser = new AnthropicParser();
+      const parser = new AnthropicParser('claude-3-haiku-20240307', schema);
 
       for await (const result of scrapper.scrapByKeyword(job.data.keyword)) {
         try {

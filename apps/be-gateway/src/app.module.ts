@@ -14,19 +14,6 @@ import { CandidatesModule } from './candidates/candidates.module';
     ConfigModule.forRoot({ isGlobal: true }),
     CampaignModule,
     CandidatesModule,
-    // ClientsModule.register([
-    //   {
-    //     name: 'FINDER_SERVICE',
-    //     transport: Transport.RMQ,
-    //     options: {
-    //       urls: [process.env.RABBITMQ_URI],
-    //       queue: 'campaign:search',
-    //       queueOptions: {
-    //         durable: false,
-    //       },
-    //     },
-    //   },
-    // ]),
     ClientsModule.register([
       {
         name: 'FINDER_SERVICE',
@@ -37,7 +24,7 @@ import { CandidatesModule } from './candidates/candidates.module';
             brokers: [process.env.KAFKA_URI],
           },
           consumer: {
-            groupId: 'be-finder',
+            groupId: 'finder-group',
             allowAutoTopicCreation: true,
           },
         },

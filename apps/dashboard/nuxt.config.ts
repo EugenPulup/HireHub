@@ -32,11 +32,17 @@ export default defineNuxtConfig({
         runOnBuild: false,
         config: {
           overwrite: true,
-          schema: process.env.GQL_HOST,
-          documents: "./queries/**/*.gql",
-
           generates: {
             "generated/graphql/": {
+              schema: process.env.GQL_HOST,
+              documents: "./queries/default/*.gql",
+              preset: "client",
+              plugins: ["typescript", "typescript-operations"],
+            },
+
+            "generated/analytic/": {
+              schema: process.env.GQL_ANALYTIC_HOST,
+              documents: "./queries/analytic/*.gql",
               preset: "client",
               plugins: ["typescript", "typescript-operations"],
             },
@@ -55,6 +61,22 @@ export default defineNuxtConfig({
         defaultOptions: {
           query: {
             fetchPolicy: "no-cache",
+          },
+        },
+        inMemoryCacheOptions: {
+          resultCaching: false,
+        },
+      },
+      analytic: {
+        httpEndpoint:
+          process.env.GQL_ANALYTIC_HOST || "http://localhost:3000/graphql",
+        browserHttpEndpoint: process.env.GQL_ANALYTIC_HOST_BROWSER,
+        connectToDevTools: true,
+
+        defaultOptions: {
+          query: {
+            fetchPolicy: "no-cache",
+            pollInterval: 1000,
           },
         },
         inMemoryCacheOptions: {

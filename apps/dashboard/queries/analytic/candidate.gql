@@ -1,0 +1,13 @@
+query rangeAnalytic($range: Int!) {
+  candidateRangeAnalytic(range: $range) {
+    date
+    count
+  }
+}
+
+query GroupByField($groupAnalyticInput: GroupAnalyticInput!) {
+  GroupByField(GroupAnalyticInput: $groupAnalyticInput) {
+    metric
+    count
+  }
+}

@@ -2,8 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
+  namespace: hirehub
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: postgres
@@ -14,7 +15,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: "postgres:14"
+          image: postgres:14
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5432

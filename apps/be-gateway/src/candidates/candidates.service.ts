@@ -3,12 +3,15 @@ import { CreateCandidateInput } from './dto/create-candidate.input';
 import { UpdateCandidateInput } from './dto/update-candidate.input';
 import { Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-
-const logger = new Logger('Candidates');
+import { ClientKafka } from '@nestjs/microservices';
+import { Inject } from '@nestjs/common';
 
 @Injectable()
 export class CandidatesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Inject('ANALYTIC_QUEUE') private analyticQueue: ClientKafka,
+  ) {}
 
   async create(createCandidateInput: CreateCandidateInput) {
     const candidate = await this.prisma.candidate.create({
@@ -60,6 +63,20 @@ export class CandidatesService {
     }
 
     await Promise.all(subWrites);
+
+    this.analyticQueue
+      .emit('candidate_create', {
+        name: candidate.name,
+        age: candidate.age,
+        typeOfWork: candidate.typeOfWork,
+        position: candidate.position,
+        salaryExpectation: candidate.salaryExpectation,
+        yearsOfExperience: candidate.yearsOfExperience,
+        campaignId: candidate.campaignId,
+        location: candidate.location,
+        createdAt: candidate.createdAt,
+      })
+      .subscribe();
 
     return candidate;
   }

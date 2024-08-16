@@ -22,7 +22,28 @@ import { ConfigService } from '@nestjs/config';
                 brokers: [configService.get('KAFKA_URI')],
               },
               consumer: {
-                groupId: 'be-finder',
+                groupId: 'finder-group',
+                allowAutoTopicCreation: true,
+              },
+            },
+          };
+        },
+      },
+    ]),
+    ClientsModule.registerAsync([
+      {
+        inject: [ConfigService],
+        name: 'ANALYTIC_QUEUE',
+        useFactory: (configService: ConfigService) => {
+          return {
+            transport: Transport.KAFKA,
+            options: {
+              client: {
+                clientId: 'be-gateway',
+                brokers: [configService.get('KAFKA_URI')],
+              },
+              consumer: {
+                groupId: 'analytic-group',
                 allowAutoTopicCreation: true,
               },
             },
