@@ -125,49 +125,17 @@ const data = [
 </script>
 
 <template>
-  <section class="grid grid-rows-3 grid-cols-3 size-full gap-5">
-    <UCard
-      v-if="!salaryAnalyticPending && salaryAnalytic"
-      class="row-span-1 col-span-1 size-full relative flex flex-col overflow-hidden"
-      :ui="{
-        body: { padding: '!py-3 !px-2', base: 'size-full' },
-        header: { padding: 'p-2' },
-      }"
-    >
-      <template #header> <span>Candidates By Salary</span></template>
-      <MoleculeChartBar
-        :data="salaryAnalytic.GroupByField"
-        x-field="metric"
-        y-field="count"
-      />
-      <!-- <ShaBarChart
-        class="size-full"
-        index="metric"
-        :data="salaryAnalytic.GroupByField"
-        :categories="['count']"
-        :show-grid-line="true"
-        :show-legend="false"
-        :show-x-axis="true"
-        :show-y-axis="false"
-        :colors="['black']"
-      /> -->
-    </UCard>
-
+  <section class="grid grid-rows-6 grid-cols-6 size-full gap-5">
     <UCard
       v-if="!ageAnalyticPending && ageAnalytic"
-      class="row-span-1 col-span-1 size-full relative flex flex-col overflow-hidden"
+      class="row-span-3 col-span-2 size-full relative flex flex-col overflow-hidden"
       :ui="{
+        body: { padding: '!py-2 !px-2', base: 'size-full' },
         header: { padding: 'p-2' },
       }"
     >
       <template #header> <span>Candidates By Age</span></template>
-      <MoleculeChartBar
-        :data="ageAnalytic.GroupByField"
-        x-field="metric"
-        y-field="count"
-        class="h-52"
-      />
-      <!-- <ShaBarChart
+      <ShaBarChart
         class="size-full"
         index="metric"
         :data="ageAnalytic.GroupByField"
@@ -175,21 +143,24 @@ const data = [
         :show-grid-line="true"
         :show-legend="false"
         :show-x-axis="true"
-        :show-y-axis="false"
+        :show-y-axis="true"
         :colors="['black']"
         :custom-tooltip="CustomExperienceTooltip"
-      /> -->
+      />
     </UCard>
 
     <UCard
       v-if="!experienceAnalyticPending && experienceAnalytic"
-      class="row-span-1 col-span-1 size-full relative flex flex-col overflow-hidden"
+      class="row-span-3 col-span-2 size-full relative flex flex-col overflow-hidden"
       :ui="{
-        body: { padding: '!py-3 !px-2', base: 'size-full' },
+        body: { padding: '!py-2 !px-2', base: 'size-full' },
         header: { padding: 'p-2' },
       }"
     >
-      <template #header> <span>Experiences Rates</span></template>
+      <template #header>
+        <span>Experiences Rates</span>
+      </template>
+
       <ShaBarChart
         class="size-full"
         index="metric"
@@ -198,15 +169,40 @@ const data = [
         :show-grid-line="true"
         :show-legend="false"
         :show-x-axis="true"
-        :show-y-axis="false"
+        :show-y-axis="true"
         :colors="['black']"
         :custom-tooltip="CustomExperienceTooltip"
       />
     </UCard>
 
     <UCard
+      v-if="!salaryAnalyticPending && salaryAnalytic"
+      class="row-span-3 col-span-2 size-full relative flex flex-col overflow-hidden"
+      :ui="{
+        body: { padding: '!py-2 !px-2', base: 'size-full' },
+        header: { padding: 'p-2' },
+      }"
+    >
+      <template #header>
+        <span>Salary Rates</span>
+      </template>
+
+      <ShaBarChart
+        class="size-full"
+        index="metric"
+        :data="salaryAnalytic.GroupByField"
+        :categories="['count']"
+        :show-grid-line="true"
+        :show-legend="false"
+        :show-x-axis="true"
+        :show-y-axis="true"
+        :colors="['black']"
+      />
+    </UCard>
+
+    <UCard
       v-if="!rangeAnalyticPending && rangeAnalytic"
-      class="row-span-2 col-span-3 size-full overflow-hidden flex flex-col"
+      class="row-span-3 col-span-6 size-full overflow-hidden flex flex-col"
       :ui="{
         body: { padding: '!py-4 !px-0', base: 'size-full' },
         header: { padding: 'p-4' },

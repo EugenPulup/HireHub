@@ -1,5 +1,10 @@
 <script setup>
-import { VisXYContainer, VisStackedBar, VisTooltip } from "@unovis/vue";
+import {
+  VisXYContainer,
+  VisStackedBar,
+  VisTooltip,
+  VisAxis,
+} from "@unovis/vue";
 
 import { StackedBar } from "@unovis/ts";
 
@@ -28,8 +33,18 @@ const triggers = {
 
 <template>
   <VisXYContainer :data="data">
-    <VisStackedBar :x="x" :y="y" :barPadding="0.5" :barMinHeight1Px="true" />
-    <VisTooltip :triggers="triggers" />
-    <VisAxis :gridLine="true" type="x" />
+    <VisStackedBar :x="(d, i) => i" :y="y" :bar-padding="0.05" />
+    <VisAxis
+      type="x"
+      :tick-format="xFormatter ?? ((v) => data[v]?.[index])"
+      :grid-line="false"
+      :tick-line="false"
+    />
+    <VisAxis
+      type="y"
+      :tick-format="xFormatter ?? ((v) => data[v]?.[index])"
+      :grid-line="false"
+      :tick-line="false"
+    />
   </VisXYContainer>
 </template>
