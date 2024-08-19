@@ -50,7 +50,7 @@ const { loading: salaryAnalyticPending, result: salaryAnalytic } =
   useQuery<GroupByFieldQuery>(
     GroupByFieldDocument,
     {
-      groupAnalyticInput: { field: "salaryExpectation" },
+      groupAnalyticInput: { field: "salary" },
     } as GroupByFieldQueryVariables,
     { clientId: "analytic", fetchPolicy: "no-cache" }
   );

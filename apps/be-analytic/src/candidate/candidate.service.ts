@@ -9,9 +9,9 @@ interface CandidateTable {
   name: string;
   campaignId: string;
   age: number;
-  typeOfWork: string;
+  workTime: string;
   position: string;
-  salaryExpectation?: number;
+  salary?: number;
   yearsOfExperience?: number;
   location: string;
   createdAt: string;
@@ -26,7 +26,7 @@ export class CandidateService {
 
   async create(createCandidateInput: CreateCandidateInput) {
     const response = await this.analyticsServer.insertPromise<CandidateTable>(
-      'candidate',
+      'candidates',
       [createCandidateInput],
     );
 
@@ -54,7 +54,7 @@ export class CandidateService {
               toDate(createdAt) AS date,
               COUNT(1) AS count
           FROM
-              hireHubTest.candidate
+              hireHubTest.candidates
           WHERE
               createdAt >= toUnixTimestamp(now() - INTERVAL ${range} DAY)
           GROUP BY
@@ -77,7 +77,7 @@ export class CandidateService {
       ${groupAnalyticInput.field} AS metric,
       COUNT(1) AS count
       FROM
-          hireHubTest.candidate
+          hireHubTest.candidates
       GROUP BY
         ${groupAnalyticInput.field}  
       ORDER BY

@@ -1,2 +1,2 @@
 -- AlterTable
-ALTER TABLE "Candidate" ALTER COLUMN "salaryExpectation" SET DEFAULT 0;
+ALTER TABLE "Candidate" ALTER COLUMN "salary" SET DEFAULT 0;

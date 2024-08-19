@@ -12,7 +12,7 @@ export class Candidate {
   position: string;
 
   @Field(() => Int, { description: 'Salary expectation of candidate' })
-  salaryExpectation: number;
+  salary: number;
 
   @Field(() => Int, { description: 'Sum of Candidate experience in years' })
   yearsOfExperience: number;

@@ -2,9 +2,10 @@ import { InputType, Field, registerEnumType } from '@nestjs/graphql';
 
 enum Fields {
   yearsOfExperience = 'yearsOfExperience',
-  salaryExpectation = 'salaryExpectation',
+  salary = 'salary',
   age = 'age',
-  typeOfWork = 'typeOfWork',
+  workTime = 'workTime',
+  workLocation = 'workLocation',
   position = 'position',
 }
 

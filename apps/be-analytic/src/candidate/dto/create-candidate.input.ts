@@ -20,13 +20,16 @@ export class CreateCandidateInput {
   age: number;
 
   @IsString()
-  typeOfWork: string;
+  workTime: string;
+
+  @IsString()
+  workLocation: string;
 
   @IsString()
   position: string;
 
   @IsNumber()
-  salaryExpectation?: number;
+  salary?: number;
 
   @IsNumber()
   yearsOfExperience?: number;

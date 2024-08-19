@@ -3,14 +3,20 @@ import { z } from 'zod';
 export const schema = z.object({
   name: z.string().describe('The name of a person'),
   age: z.number().describe("The person's age").nullish(),
-  typeOfWork: z
-    .enum(['office', 'remote', 'hybrid'])
-    .describe("The person's type of work. (office, remote, hybrid)")
+  workTime: z
+    .enum(['FULL_TIME', 'PART_TIME', 'CONTRACT', 'INTERNSHIP', 'UNDEFINED'])
+    .describe("The person's type of work.")
+    .nullish(),
+  workLocation: z
+    .enum(['REMOTE', 'OFFICE', 'MIXED', 'UNDEFINED'])
+    .describe("The person's type of work location.")
     .nullish(),
   position: z.string().describe("The person's position"),
-  salaryExpectation: z
+  salary: z
     .number()
-    .describe("The person's salary expectations")
+    .describe(
+      "The person's salary expectations. Convert Salary from UAH to USD",
+    )
     .nullish(),
   skills: z.array(z.string()).describe("The person's skills"),
   yearsOfExperience: z

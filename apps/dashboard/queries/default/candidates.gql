@@ -3,7 +3,7 @@ query Candidates($offset: Int!, $limit: Int!) {
     id
     name
     position
-    salaryExpectation
+    salary
     yearsOfExperience
     createdAt
   }

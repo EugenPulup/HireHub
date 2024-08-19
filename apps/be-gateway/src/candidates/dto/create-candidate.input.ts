@@ -7,6 +7,7 @@ import {
   IsNotEmpty,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import type { Providers, WorkTime, WorkLocation } from '@prisma/client';
 
 class EducationDTO {
   @IsString()
@@ -59,14 +60,17 @@ export class CreateCandidateInput {
   age: number;
 
   @IsString()
-  typeOfWork: string;
+  workTime: WorkTime;
+
+  @IsString()
+  workLocation: WorkLocation;
 
   @IsString()
   position: string;
 
   @IsNumber()
   @IsOptional()
-  salaryExpectation?: number;
+  salary?: number;
 
   @IsNumber()
   @IsOptional()

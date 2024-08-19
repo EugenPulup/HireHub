@@ -33,7 +33,7 @@ type Candidate {
   position: String!
 
   """Salary expectation of candidate"""
-  salaryExpectation: Int!
+  salary: Int!
 
   """Sum of Candidate experience in years"""
   yearsOfExperience: Int!

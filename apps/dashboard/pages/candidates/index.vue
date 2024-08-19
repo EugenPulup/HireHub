@@ -37,7 +37,7 @@ const columns = [
     sortable: true,
   },
   {
-    key: "salaryExpectation",
+    key: "salary",
     label: "Salary",
     sortable: true,
   },

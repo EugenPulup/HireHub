@@ -23,15 +23,13 @@ class OllamaParser implements Parser {
     this.schema = z.object({
       name: z.string().describe('The name of a person'),
       age: z.number().describe("The person's age"),
-      typeOfWork: z
+      workTime: z
         .enum(['Remote', 'Office', 'Hybrid'])
         .describe(
           "The person's type of work, which can be one of 'Remote', 'Office', or 'Hybrid'",
         ),
       position: z.string().describe("The person's position"),
-      salaryExpectation: z
-        .number()
-        .describe("The person's salary expectations"),
+      salary: z.number().describe("The person's salary expectations"),
       skills: z.array(z.string()).describe("The person's skills"),
       location: z.string().describe("The person's location"),
       education: z

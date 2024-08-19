@@ -29,8 +29,9 @@ input GroupAnalyticInput {
 
 enum Fields {
   yearsOfExperience
-  salaryExpectation
+  salary
   age
-  typeOfWork
+  workTime
+  workLocation
   position
 }

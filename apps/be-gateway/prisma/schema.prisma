@@ -25,9 +25,10 @@ model Candidate {
   name              String?      @default("Unspecified")
   campaignId        String
   age               Int?         @default(0)
-  typeOfWork        String?      @default("Unspecified")
+  workTime          WorkTime     @default(UNDEFINED)
+  workLocation      WorkLocation @default(UNDEFINED)
   position          String?      @default("Unspecified")
-  salaryExpectation Int?         @default(0)
+  salary            Int?         @default(0)
   skills            String[]
   location          String?
   languages         String[]
@@ -80,4 +81,19 @@ enum Providers {
   WORKUA
   ROBOTAUA
   LINKEDIN
+}
+
+enum WorkTime {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+  UNDEFINED
+}
+
+enum WorkLocation {
+  REMOTE
+  OFFICE
+  MIXED
+  UNDEFINED
 }
