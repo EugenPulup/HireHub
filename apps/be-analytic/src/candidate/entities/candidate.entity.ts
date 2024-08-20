@@ -38,8 +38,8 @@ export class RangeAnalytic {
 
 @ObjectType()
 export class GroupByField {
-  @Field(() => Int, { description: 'count of candidates' })
-  metric: number;
+  @Field(() => String, { description: 'count of candidates' })
+  metric: string;
 
   @Field(() => Int, { description: 'count of candidates' })
   count: number;

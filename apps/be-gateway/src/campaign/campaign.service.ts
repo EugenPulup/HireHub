@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateCampaignInput } from './dto/create-campaign.input';
 import { UpdateCampaignInput } from './dto/update-campaign.input';
 import { ListCampaignInput } from './dto/list-campaign.input';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '@hirehub/prisma';
 import { Controller, Get, Post, Inject, Body } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 
@@ -46,20 +46,20 @@ export class CampaignService {
     return this.prisma.campaign.count();
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     return this.prisma.campaign.findFirst({
       where: { id },
     });
   }
 
-  update(id: string, updateCampaignInput: UpdateCampaignInput) {
+  async update(id: string, updateCampaignInput: UpdateCampaignInput) {
     return this.prisma.campaign.update({
       where: { id },
       data: updateCampaignInput,
     });
   }
 
-  remove(ids: string[]) {
+  async remove(ids: string[]) {
     return this.prisma.campaign.deleteMany({
       where: {
         id: {

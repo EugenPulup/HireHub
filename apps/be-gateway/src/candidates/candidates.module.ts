@@ -3,7 +3,7 @@ import { CandidatesService } from './candidates.service';
 import { CandidatesResolver } from './candidates.resolver';
 import { CandidatesConsumer } from './candidates.consumer';
 import { Transport, ClientsModule } from '@nestjs/microservices';
-import { PrismaModule } from '../prisma/prisma.module';
+import { PrismaModule } from '@hirehub/prisma';
 import { ConfigService } from '@nestjs/config';
 
 @Module({

@@ -1,6 +1,6 @@
 import { Field, Int, InputType } from '@nestjs/graphql';
 
-import type { CampaignEndType, CampaignStatus } from '@prisma/client';
+import type { CampaignStatus, CampaignEndType } from '@hirehub/prisma';
 
 @InputType()
 export class ListCampaignInput {

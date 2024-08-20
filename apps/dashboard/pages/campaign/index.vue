@@ -350,6 +350,15 @@ watch(data, (value) => {
               >Edit</UButton
             >
           </NuxtLink>
+          <NuxtLink :to="{ name: 'campaign-details', params: { id: row.id } }">
+            <UButton
+              icon="i-mage-file-2"
+              size="xs"
+              variant="outline"
+              color="yellow"
+              >Details</UButton
+            >
+          </NuxtLink>
         </div>
       </template>
     </UTable>

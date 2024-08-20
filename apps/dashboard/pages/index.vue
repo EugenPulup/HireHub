@@ -46,11 +46,11 @@ const { loading: ageAnalyticPending, result: ageAnalytic } =
     { clientId: "analytic", fetchPolicy: "no-cache" }
   );
 
-const { loading: salaryAnalyticPending, result: salaryAnalytic } =
+const { loading: workLocationAnalyticPending, result: workLocationAnalytic } =
   useQuery<GroupByFieldQuery>(
     GroupByFieldDocument,
     {
-      groupAnalyticInput: { field: "salary" },
+      groupAnalyticInput: { field: "workLocation" },
     } as GroupByFieldQueryVariables,
     { clientId: "analytic", fetchPolicy: "no-cache" }
   );
@@ -176,7 +176,7 @@ const data = [
     </UCard>
 
     <UCard
-      v-if="!salaryAnalyticPending && salaryAnalytic"
+      v-if="!workLocationAnalyticPending && workLocationAnalytic"
       class="row-span-3 col-span-2 size-full relative flex flex-col overflow-hidden"
       :ui="{
         body: { padding: '!py-2 !px-2', base: 'size-full' },
@@ -184,13 +184,13 @@ const data = [
       }"
     >
       <template #header>
-        <span>Salary Rates</span>
+        <span>Work Location</span>
       </template>
 
       <ShaBarChart
         class="size-full"
         index="metric"
-        :data="salaryAnalytic.GroupByField"
+        :data="workLocationAnalytic.GroupByField"
         :categories="['count']"
         :show-grid-line="true"
         :show-legend="false"

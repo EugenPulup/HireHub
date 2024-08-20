@@ -59,14 +59,14 @@ services:
   be-gateway:
     env_file: .env
     build:
-      context: ./apps/be-gateway
-      dockerfile: dockerfile
+      context: .
+      dockerfile: ./apps/be-gateway/dockerfile
       target: dev
     image: eugenepulup228/be-gateway
     container_name: be-gateway
     restart: unless-stopped
     volumes:
-      - ./apps/be-gateway:/app
+      # - ./apps/be-gateway:/app
       - /app/node_modules
     ports:
       - "${GATEWAY_PORT}:3000"

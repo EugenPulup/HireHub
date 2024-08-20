@@ -39,6 +39,20 @@ query Campaign($listCampaignInput: ListCampaignInput!) {
   }
 }
 
+query CampaignById($campaignByIdId: String!) {
+  campaignById(id: $campaignByIdId) {
+    id
+    name
+    keyword
+    providers
+    createdAt
+    updatedAt
+    status
+    endType
+    endValue
+  }
+}
+
 query CampaignById($id: String!) {
   campaignById(id: $id) {
     name

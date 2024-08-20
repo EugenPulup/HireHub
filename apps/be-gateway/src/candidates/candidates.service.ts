@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateCandidateInput } from './dto/create-candidate.input';
 import { UpdateCandidateInput } from './dto/update-candidate.input';
 import { Logger } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '@hirehub/prisma';
 import { ClientKafka } from '@nestjs/microservices';
 import { Inject } from '@nestjs/common';
 

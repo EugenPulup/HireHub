@@ -16,9 +16,6 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    "paths": {
-      "@hirehub/prisma": ["../../packages/prisma/dist"]
-    }
+    "noFallthroughCasesInSwitch": false
   }
 }

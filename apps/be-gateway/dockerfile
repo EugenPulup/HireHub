@@ -18,9 +18,7 @@ FROM base AS dev
 
 EXPOSE 3000 
 
-RUN pnpm run prisma:generate
-
-CMD [ "pnpm", "run", "start:dev" ]
+CMD [ "pnpm", "--filter", "be-gateway", "start:dev" ]
 # ===== Development Stage =====
 
 # ===== Production Stage =====

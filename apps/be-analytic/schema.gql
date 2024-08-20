@@ -12,7 +12,7 @@ type RangeAnalytic {
 
 type GroupByField {
   """count of candidates"""
-  metric: Int!
+  metric: String!
 
   """count of candidates"""
   count: Int!
